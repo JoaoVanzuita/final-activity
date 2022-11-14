@@ -21,5 +21,4 @@ export class User {
 
   @Column({ length: 255 })
   role: UserRole
-
 }
