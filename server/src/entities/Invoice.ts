@@ -2,8 +2,8 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { InvoiceItem } from "./InvoiceItem"
 
 export enum InvoiceType {
-  purchaseInvoice = 'purchase_invoice',
-  saleInvoice = 'sale_invoice'
+  purchase = 'purchase_invoice',
+  sale = 'sale_invoice'
 }
 
 @Entity('invoices')
