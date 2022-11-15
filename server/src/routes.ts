@@ -1,11 +1,8 @@
 import { Router } from "express";
-import { Product } from "./entities/Product";
+import { UserController } from "./controllers/UserController";
 
-const router = Router()
+const routes = Router()
 
-router.get('/user', (req, res) => {
+routes.post('/user', new UserController().create)
 
-  res.send('<h1>Hello World!</h1>')
-})
-
-export { router }
+export { routes }
