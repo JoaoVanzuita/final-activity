@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { UserRole } from "../entities/User";
+import { Like } from "typeorm";
+import { User, UserRole } from "../entities/User";
 import { UserRepository } from "../repositories/UserRepository";
+import { UserService } from "../service/UserService";
 
 export class UserController {
   async create(req: Request, res: Response) {
@@ -28,16 +30,42 @@ export class UserController {
     }
 
     try {
-      const newUser = UserRepository.create({
+      const user = await new UserService().create(
         name,
         email,
         password,
-        role: UserRole[role]
+        role
+      )
+
+      return res.status(201).json({ "message": user.id })
+
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({ "message": "Internal server error" })
+    }
+  }
+  
+  async findByName(req: Request, res: Response) {
+    const name = req.params.userName
+
+    if (!name) {
+      return res.status(400).json({
+        "message": "no name specified"
+      })
+    }
+
+    try {
+      const users = await UserRepository.findBy({
+        name: Like(`%${name}%`)
       })
 
-      await UserRepository.save(newUser)
+      if (users.length) {
+        return res.json(users)
+      }
 
-      return res.status(201).json({ "message": newUser.id })
+      return res.status(404).json({
+        "message": "user not found"
+      })
 
     } catch (error) {
       console.log(error)

@@ -13,10 +13,10 @@ export class User {
   @Column({ length: 255 })
   name: string
 
-  @Column({ length: 255 })
+  @Column({ length: 255, unique: true })
   email: string
 
-  @Column({ length: 255 })
+  @Column({ length: 255, select: false })
   password: string
 
   @Column({ length: 255 })
