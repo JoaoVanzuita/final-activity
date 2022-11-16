@@ -18,6 +18,26 @@ export class UserController {
     })
   }
 
+  async findAll(req: Request, res: Response) {
+    const users = await new UserService().findAll()
+
+    return res.json({
+      "status": 200,
+      "data": users
+    })
+  }
+
+  async findById(req: Request, res: Response) {
+    const id = req.params.id
+
+    const user = await new UserService().findById(id)
+
+    return res.json({
+      "status": 200,
+      "data": user
+    })
+  }
+
   async findByName(req: Request, res: Response) {
     const name = req.params.userName
 
@@ -27,6 +47,5 @@ export class UserController {
       "status": 200,
       "data": users
     })
-
   }
 }
