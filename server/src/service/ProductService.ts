@@ -14,7 +14,7 @@ export class ProductService {
 
     return product
   }
-  async udpate(id, name): Promise<Product> {
+  async update(id, name): Promise<Product> {
 
     const product = await ProductRepository.findOneBy({
       id

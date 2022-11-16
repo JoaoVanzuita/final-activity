@@ -9,6 +9,8 @@ routes.post('/user', new UserController().create)
 routes.get('/user', new UserController().findAll)
 routes.get('/user/:id', new UserController().findById)
 routes.get('/user/:userName', new UserController().findByName)
+routes.put('/user/:id', new UserController().update)
+routes.delete('/user/:id', new UserController().delete)
 
 routes.post('/product', new ProductController().create)
 routes.put('/product/:id', new ProductController().update)

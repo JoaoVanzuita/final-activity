@@ -38,4 +38,43 @@ export class UserService {
 
     return users
   }
+  async update(id, name, email, password): Promise<User> {
+
+    const user = await UserRepository.findOneBy({
+      id
+    })
+
+    if (!user) {
+      return null
+    }
+
+    user.name = name
+    user.email = email
+    user.password = password
+
+    await UserRepository.save(user)
+
+    const newUser = await UserRepository.findOneBy({
+      id
+    })
+
+    return newUser
+  }
+  async delete(id): Promise<number> {
+
+    await UserRepository.delete({
+      id
+    })
+
+    const user = await UserRepository.findOneBy({
+      id
+    })
+
+    if (!user) {
+
+      return id
+    }
+
+    return -1
+  }
 }

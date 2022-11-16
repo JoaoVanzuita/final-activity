@@ -16,7 +16,7 @@ export class ProductController {
     const name = req.body
     const id = req.params.id
 
-    const product = await new ProductService().udpate(id, name)
+    const product = await new ProductService().update(id, name)
 
     return res.status(200).json({
       "status": 200,

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { UserRepository } from "../repositories/UserRepository";
 import { UserService } from "../service/UserService";
 
 export class UserController {
@@ -47,5 +48,28 @@ export class UserController {
       "status": 200,
       "data": users
     })
+  }
+
+  async update(req: Request, res: Response) {
+    const { name, email, password } = req.body
+    const id = req.params.id
+
+    const user = await new UserService().update(id, name, email, password)
+
+    return res.status(200).json({
+      "status": 200,
+      "data": user
+    })
+  }
+  async delete(req: Request, res: Response) {
+    const id = req.params.id
+
+    const idDeleted = await new UserService().delete(id)
+
+    return res.status(200).json({
+      "status": 200,
+      "data": idDeleted
+    })
+
   }
 }
