@@ -6,10 +6,10 @@ import { UserController } from "./controllers/UserController";
 const routes = Router()
 
 routes.post('/user', new UserController().create)
-
 routes.get('/user/:userName', new UserController().findByName)
 
 routes.post('/product', new ProductController().create)
+routes.put('/product/:id', new ProductController().update)
 
 routes.post('/invoice', new InvoiceController().create)
 

@@ -1,37 +1,26 @@
 import { Request, Response } from "express";
-import { ProductRepository } from "../repositories/ProductRepository";
+import { ProductService } from "../service/ProductService";
 
 export class ProductController {
   async create(req: Request, res: Response) {
     const { name, costPrice } = req.body
 
-    const errors = []
+    const product = await new ProductService().create(name, costPrice)
 
-    if (!name) {
-      errors.push("no name specified")
-    }
-    if (!costPrice) {
-      errors.push("no cost price specified")
-    }
-    if (errors.length) {
-      return res.status(400).json({ "message": errors.join() })
-    }
+    return res.status(201).json({
+      "status": 201,
+      "data": product.id
+    })
+  }
+  async update(req: Request, res: Response) {
+    const name = req.body
+    const id = req.params.id
 
-    try {
-      const newProduct = ProductRepository.create({
-        name,
-        quantity: 0,
-        costPrice,
-        salePrice: costPrice * 1.1
-      })
+    const product = await new ProductService().udpate(id, name)
 
-      await ProductRepository.save(newProduct)
-
-      return res.status(201).json({ "message": newProduct.id })
-
-    } catch (error) {
-      console.log(error)
-      return res.status(500).json({ "message": "Internal server error" })
-    }
+    return res.status(200).json({
+      "status": 200,
+      "data": product.id
+    })
   }
 }

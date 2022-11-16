@@ -1,75 +1,32 @@
 import { Request, Response } from "express";
-import { Like } from "typeorm";
-import { User, UserRole } from "../entities/User";
-import { UserRepository } from "../repositories/UserRepository";
 import { UserService } from "../service/UserService";
 
 export class UserController {
   async create(req: Request, res: Response) {
     const { name, email, password, role } = req.body
 
-    const errors = []
+    const user = await new UserService().create(
+      name,
+      email,
+      password,
+      role
+    )
 
-    if (!name) {
-      errors.push("no name specified")
-    }
-    if (!email) {
-      errors.push("no email specified")
-    }
-    if (!password) {
-      errors.push("no password specified")
-    }
-    if (!role) {
-      errors.push("no role specified")
-    }
-    if (role != 'manager' && role != 'employee') {
-      errors.push("invalid role value")
-    }
-    if (errors.length) {
-      return res.status(400).json({ "message": errors.join() })
-    }
-
-    try {
-      const user = await new UserService().create(
-        name,
-        email,
-        password,
-        role
-      )
-
-      return res.status(201).json({ "message": user.id })
-
-    } catch (error) {
-      console.log(error)
-      return res.status(500).json({ "message": "Internal server error" })
-    }
+    return res.status(201).json({
+      "status": 201,
+      "data": user.id
+    })
   }
-  
+
   async findByName(req: Request, res: Response) {
     const name = req.params.userName
 
-    if (!name) {
-      return res.status(400).json({
-        "message": "no name specified"
-      })
-    }
+    const users = await new UserService().findByName(name)
 
-    try {
-      const users = await UserRepository.findBy({
-        name: Like(`%${name}%`)
-      })
+    return res.json({
+      "status": 200,
+      "data": users
+    })
 
-      if (users.length) {
-        return res.json(users)
-      }
-
-      return res.status(404).json({
-        "message": "user not found"
-      })
-
-    } catch (error) {
-      console.log(error)
-      return res.status(500).json({ "message": "Internal server error" })
-    }
   }
 }
