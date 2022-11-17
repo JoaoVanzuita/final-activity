@@ -1,9 +1,18 @@
 import { Like } from "typeorm";
 import { User } from "../entities/User";
+import { ServerError } from "../errors/ServerError";
 import { UserRepository } from "../repositories/UserRepository";
 
 export class UserService {
   async create(name, email, password, role): Promise<User> {
+
+    const userAlreadyExists = UserRepository.findOneBy({
+      email
+    })
+
+    if (userAlreadyExists) {
+      throw new ServerError('user already exists')
+    }
 
     const user = UserRepository.create({
       name,
@@ -62,19 +71,18 @@ export class UserService {
   }
   async delete(id): Promise<number> {
 
-    await UserRepository.delete({
-      id
-    })
-
     const user = await UserRepository.findOneBy({
       id
     })
 
     if (!user) {
-
-      return id
+      throw new ServerError('user not found', 404)
     }
 
-    return -1
+    await UserRepository.delete({
+      id
+    })
+
+    return id
   }
 }

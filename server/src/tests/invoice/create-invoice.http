@@ -7,10 +7,10 @@ Content-Type: application/json
 #   "itens": [
 #     {
 #       "quantity": 5,
-#       "unitPrice": 100,
+#       "unitPrice": 200,
 #       "product": {
 #         "id": 1,
-#         "costPrice": 100
+#         "costPrice": 200
 #       }
 #     },
 #     {

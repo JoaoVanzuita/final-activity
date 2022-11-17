@@ -1,9 +1,27 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repositories/UserRepository";
+import { ServerError } from "../errors/ServerError";
 import { UserService } from "../service/UserService";
 
 export class UserController {
   async create(req: Request, res: Response) {
+    const errors = []
+
+    if (!req.body.name) {
+      errors.push('no name specified')
+    }
+    if (!req.body.email) {
+      errors.push('no email specified')
+    }
+    if (!req.body.password) {
+      errors.push('no password specified')
+    }
+    if (!req.body.role) {
+      errors.push('no role specified')
+    }
+    if (errors.length) {
+      throw new ServerError(errors.join())
+    }
+
     const { name, email, password, role } = req.body
 
     const user = await new UserService().create(
@@ -27,11 +45,14 @@ export class UserController {
       "data": users
     })
   }
-
   async findById(req: Request, res: Response) {
     const id = req.params.id
 
     const user = await new UserService().findById(id)
+
+    if (!user) {
+      throw new ServerError('user not found', 404)
+    }
 
     return res.json({
       "status": 200,
@@ -40,9 +61,13 @@ export class UserController {
   }
 
   async findByName(req: Request, res: Response) {
-    const name = req.params.userName
+    const name = req.params.name
 
     const users = await new UserService().findByName(name)
+
+    if (users.length == 0) {
+      throw new ServerError('no users found', 404)
+    }
 
     return res.json({
       "status": 200,
@@ -51,10 +76,29 @@ export class UserController {
   }
 
   async update(req: Request, res: Response) {
+    const errors = []
+
+    if (!req.body.name) {
+      errors.push('no name specified')
+    }
+    if (!req.body.email) {
+      errors.push('no email specified')
+    }
+    if (!req.body.password) {
+      errors.push('no password specified')
+    }
+    if (errors.length) {
+      throw new ServerError(errors.join())
+    }
+
     const { name, email, password } = req.body
     const id = req.params.id
 
     const user = await new UserService().update(id, name, email, password)
+
+    if (!user) {
+      throw new ServerError('user not found', 404)
+    }
 
     return res.status(200).json({
       "status": 200,
@@ -70,6 +114,5 @@ export class UserController {
       "status": 200,
       "data": idDeleted
     })
-
   }
 }

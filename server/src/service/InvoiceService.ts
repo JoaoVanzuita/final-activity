@@ -1,4 +1,4 @@
-import { Invoice, InvoiceType } from "../entities/Invoice";
+import { Invoice } from "../entities/Invoice";
 import { InvoiceItem } from "../entities/InvoiceItem";
 import { InvoiceItemRepository } from "../repositories/InvoiceItemRepository";
 import { InvoiceRepository } from "../repositories/InvoiceRepository";
@@ -19,7 +19,7 @@ export class InvoiceService {
         invoice: {
           "id": newInvoice.id
         },
-        unitPrice: item.unitPrice
+        unitPrice: item.unitPrice 
       })
 
       await InvoiceItemRepository.save(newItem)
