@@ -2,23 +2,21 @@ POST http://127.0.0.1:8080/invoice HTTP/1.1
 Content-Type: application/json
 
 # {
-#   "type": "purchase",
-#   "date": "2022-11-15",
+#   "type": "sale",
+#   "date": "2022-11-17",
 #   "itens": [
 #     {
 #       "quantity": 5,
-#       "unitPrice": 200,
+#       "unitPrice": 165,
 #       "product": {
-#         "id": 1,
-#         "costPrice": 200
+#         "id": 5
 #       }
 #     },
 #     {
 #       "quantity": 5,
-#       "unitPrice": 200,
+#       "unitPrice": 330,
 #       "product": {
-#         "id": 2,
-#         "costPrice": 200
+#         "id": 6
 #       }
 #     }
 #   ]

@@ -1,7 +1,9 @@
-import { Invoice } from "../entities/Invoice";
+import { Invoice, InvoiceType } from "../entities/Invoice";
 import { InvoiceItem } from "../entities/InvoiceItem";
+import { ServerError } from "../errors/ServerError";
 import { InvoiceItemRepository } from "../repositories/InvoiceItemRepository";
 import { InvoiceRepository } from "../repositories/InvoiceRepository";
+import { ProductService } from "./ProductService";
 
 export class InvoiceService {
   async create(invoice: Invoice): Promise<Invoice> {
@@ -19,10 +21,22 @@ export class InvoiceService {
         invoice: {
           "id": newInvoice.id
         },
-        unitPrice: item.unitPrice 
+        unitPrice: item.unitPrice
       })
 
       await InvoiceItemRepository.save(newItem)
+
+      if (newInvoice.type == InvoiceType.purchase) {
+        const averagePrice = await new ProductService().getAveragePrice(item.product)
+
+        await new ProductService().updatePrice(item.product.id, averagePrice)
+
+        await new ProductService().updateInventory(item.product.id, item.quantity)
+      }
+      if (newInvoice.type == InvoiceType.sale) {
+        await new ProductService().updateInventory(item.product.id, -item.quantity)
+      }
+
     })
 
     return newInvoice

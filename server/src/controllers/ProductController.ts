@@ -5,21 +5,13 @@ import { ProductService } from "../service/ProductService";
 export class ProductController {
   async create(req: Request, res: Response) {
 
-    const errors = []
-
     if (!req.body.name) {
-      errors.push('no name specified')
-    }
-    if (!req.body.costPrice) {
-      errors.push('no cost price specified')
-    }
-    if (errors.length) {
-      throw new ServerError(errors.join())
+      throw new ServerError('no name specified')
     }
 
     const { name, costPrice } = req.body
 
-    const product = await new ProductService().create(name, costPrice)
+    const product = await new ProductService().create(name)
 
     return res.status(201).json({
       "status": 201,
