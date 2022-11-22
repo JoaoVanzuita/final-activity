@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { InvoiceController } from "./controllers/InvoiceController";
-import { ProductController } from "./controllers/ProductController";
-import { UserController } from "./controllers/UserController";
+import { InvoiceController } from "./modules/controllers/InvoiceController";
+import { ProductController } from "./modules/controllers/ProductController";
+import { UserController } from "./modules/controllers/UserController";
+import { authMiddleware } from "./modules/middlewares/authMiddleware";
 
 const routes = Router()
+
+routes.post('/login', new UserController().login)
+
+routes.use(authMiddleware)
 
 routes.post('/user', new UserController().create)
 routes.get('/user', new UserController().findAll)
@@ -11,7 +16,6 @@ routes.get('/user/:id', new UserController().findById)
 routes.get('/user/:name', new UserController().findByName)
 routes.put('/user/:id', new UserController().update)
 routes.delete('/user/:id', new UserController().delete)
-routes.post('/login', new UserController().login)
 
 routes.post('/product', new ProductController().create)
 routes.get('/product', new ProductController().findAll)

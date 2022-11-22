@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import { ServerError } from "../errors/ServerError";
 import { UserService } from "../service/UserService";
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import { JWTPayload } from "../types/JWTPayload";
-import { LoginService } from "../service/LoginService";
 
 export class UserController {
   async create(req: Request, res: Response) {
@@ -44,8 +41,6 @@ export class UserController {
   }
 
   async findAll(req: Request, res: Response) {
-    await new LoginService().validate(req)
-
     const users = await new UserService().findAll()
 
     return res.json({
