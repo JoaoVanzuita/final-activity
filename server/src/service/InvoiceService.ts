@@ -1,6 +1,5 @@
 import { Invoice, InvoiceType } from "../entities/Invoice";
 import { InvoiceItem } from "../entities/InvoiceItem";
-import { ServerError } from "../errors/ServerError";
 import { InvoiceItemRepository } from "../repositories/InvoiceItemRepository";
 import { InvoiceRepository } from "../repositories/InvoiceRepository";
 import { ProductService } from "./ProductService";

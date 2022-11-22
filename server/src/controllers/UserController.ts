@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { ServerError } from "../errors/ServerError";
 import { UserService } from "../service/UserService";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { JWTPayload } from "../types/JWTPayload";
+import { LoginService } from "../service/LoginService";
 
 export class UserController {
   async create(req: Request, res: Response) {
@@ -24,10 +28,12 @@ export class UserController {
 
     const { name, email, password, role } = req.body
 
+    const encryptedPassword = await bcrypt.hash(password, 10)
+
     const user = await new UserService().create(
       name,
       email,
-      password,
+      encryptedPassword,
       role
     )
 
@@ -38,6 +44,8 @@ export class UserController {
   }
 
   async findAll(req: Request, res: Response) {
+    await new LoginService().validate(req)
+
     const users = await new UserService().findAll()
 
     return res.json({
@@ -114,5 +122,30 @@ export class UserController {
       "status": 200,
       "data": idDeleted
     })
+  }
+  async login(req: Request, res: Response) {
+    const errors = []
+
+    if (!req.body.email) {
+      errors.push('no email specified')
+    }
+    if (!req.body.password) {
+      errors.push('no password specified')
+    }
+    if (errors.length) {
+      throw new ServerError(errors.join())
+    }
+
+    const { email, password } = req.body
+
+    const token = await new UserService().login(email, password)
+
+    return res.json({
+      "status": 200,
+      "token": token
+    })
+  }
+  async getProfile(req: Request, res: Response) {
+
   }
 }

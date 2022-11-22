@@ -1,17 +1,18 @@
 import { Like } from "typeorm";
-import { User } from "../entities/User";
+import { User, UserRole } from "../entities/User";
 import { ServerError } from "../errors/ServerError";
 import { UserRepository } from "../repositories/UserRepository";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export class UserService {
-  async create(name, email, password, role): Promise<User> {
-
-    const userAlreadyExists = UserRepository.findOneBy({
+  async create(name: string, email: string, password: string, role: UserRole): Promise<User> {
+    const userAlreadyExists = await UserRepository.findOneBy({
       email
     })
 
     if (userAlreadyExists) {
-      throw new ServerError('user already exists')
+      throw new ServerError(`email user${email} is already registered`)
     }
 
     const user = UserRepository.create({
@@ -84,5 +85,34 @@ export class UserService {
     })
 
     return id
+  }
+  async login(email, password): Promise<string> {
+    const user = await UserRepository.findOneBy({
+      email
+    })
+
+    if (!user) {
+      throw new ServerError('invalid email')
+    }
+
+    const result = await UserRepository
+      .createQueryBuilder('user')
+      .select('password')
+      .where('user.id = :id', { id: user.id })
+      .getRawOne()
+
+    const verifyPassword = await bcrypt.compare(password, result.password)
+
+    if (!verifyPassword) {
+      throw new ServerError('invalid password')
+    }
+
+    const token = jwt.sign({
+      id: user.id
+    }, process.env.JWT_PASSWORD, {
+      expiresIn: '1h'
+    })
+
+    return token
   }
 }
