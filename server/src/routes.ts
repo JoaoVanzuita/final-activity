@@ -16,6 +16,7 @@ routes.get('/user/:id', new UserController().findById)
 routes.get('/user/:name', new UserController().findByName)
 routes.put('/user/:id', new UserController().update)
 routes.delete('/user/:id', new UserController().delete)
+routes.get('/user/logged', new UserController().getLoggedUser)
 
 routes.post('/product', new ProductController().create)
 routes.get('/product', new ProductController().findAll)

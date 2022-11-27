@@ -137,10 +137,13 @@ export class UserController {
 
     return res.json({
       "status": 200,
-      "token": token
+      "data": token
     })
   }
-  async getProfile(req: Request, res: Response) {
-
+  async getLoggedUser(req: Request, res: Response) {
+    return res.json({
+      "status": 200,
+      "data": req.user
+    })
   }
 }
