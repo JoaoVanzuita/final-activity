@@ -8,23 +8,23 @@ const routes = Router()
 
 routes.post('/login', new UserController().login)
 
-routes.use(authMiddleware)
+// routes.use(authMiddleware)
 
-routes.post('/user', new UserController().create)
-routes.get('/user', new UserController().findAll)
-routes.get('/user/:id', new UserController().findById)
-routes.get('/user/:name', new UserController().findByName)
-routes.put('/user/:id', new UserController().update)
-routes.delete('/user/:id', new UserController().delete)
-routes.get('/user/logged', new UserController().getLoggedUser)
+routes.post('/users', new UserController().create)
+routes.get('/users', new UserController().findAll)
+routes.get('/users/:id', new UserController().findById)
+routes.get('/users/:name', new UserController().findByName)
+routes.put('/users/:id', new UserController().update)
+routes.delete('/users/:id', new UserController().delete)
+routes.get('/users/logged', new UserController().getLoggedUser)
 
-routes.post('/product', new ProductController().create)
-routes.get('/product', new ProductController().findAll)
-routes.get('/product/:id', new ProductController().findById)
-routes.get('/product/:name', new ProductController().findByName)
-routes.put('/product/:id', new ProductController().update)
-routes.delete('/product/:id', new ProductController().delete)
+routes.post('/products', new ProductController().create)
+routes.get('/products', new ProductController().findAll)
+routes.get('/products/:id', new ProductController().findById)
+routes.get('/products/:name', new ProductController().findByName)
+routes.put('/products/:id', new ProductController().update)
+routes.delete('/products/:id', new ProductController().delete)
 
-routes.post('/invoice', new InvoiceController().create)
+routes.post('/invoices', new InvoiceController().create)
 
 export { routes }

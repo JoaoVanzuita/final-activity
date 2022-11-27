@@ -17,7 +17,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({children, title,
     <Box height='100%' display='flex' flexDirection='column' gap={1}>
       <Box padding={1} height={theme.spacing(smDown ? 6 : mdDown ? 8 : 12)} display='flex' alignItems='center' gap={1}>
 
-        {smDown && <IconButton onClick={toggleDrawerOpen}>
+        {mdDown && <IconButton onClick={toggleDrawerOpen}>
           <Icon>menu</Icon>
         </IconButton>}
         <Typography

@@ -36,12 +36,12 @@ interface IMenuDrawer {
 export const DrawerMenu: React.FC<IMenuDrawer> = ({children}) => {
   const theme = useTheme();
   const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const {toggleTheme} = useAppThemeContext();
 
   return(
     <>
-      <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen}>
+      <Drawer open={isDrawerOpen} variant={mdDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen}>
 
         <Box width={theme.spacing(28)} height='100%' display='flex' flexDirection='column'>
 
@@ -61,7 +61,7 @@ export const DrawerMenu: React.FC<IMenuDrawer> = ({children}) => {
                   key={drawerOption.path}
                   icon={drawerOption.icon}
                   label={drawerOption.label}
-                  onClick={smDown ? toggleDrawerOpen : undefined}
+                  onClick={mdDown ? toggleDrawerOpen : undefined}
                 />
               ))}
             </List>
@@ -81,7 +81,7 @@ export const DrawerMenu: React.FC<IMenuDrawer> = ({children}) => {
         </Box>
       </Drawer>
 
-      <Box height='100vh' marginLeft={smDown ? 0 : theme.spacing(28)}>
+      <Box height='100vh' marginLeft={mdDown ? 0 : theme.spacing(28)}>
         {children}
       </Box>
     </>

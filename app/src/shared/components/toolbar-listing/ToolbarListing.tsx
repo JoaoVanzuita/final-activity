@@ -1,34 +1,43 @@
-import { Box, Button, Divider, Icon, Paper, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Button, Divider, Icon, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Environment } from "../../environment"
 
-interface IToolbarTransactionProps {
+interface IToolbarListingProps {
   textButtonNew?: string
+  textSearch?: string
 
   showButtonNew?: boolean
   showButtonClose?: boolean
   showButtonDelete?: boolean
   showButtonSave?: boolean
+  showSearchInput?:boolean
 
   onClickButtonNew?: () => void
   onClickButtonDelete?: () => void
   onClickButtonSave?: () => void
   onClickButtonClose?: () => void
+  onChangeTextSearch?: (newText: string) => void
 }
 
-export const ToolbarTransaction: React.FC<IToolbarTransactionProps> = ({
+export const ToolbarListing: React.FC<IToolbarListingProps> = ({
   textButtonNew = 'novo',
+  textSearch = Environment.SEARCH_INPUT,
 
   showButtonNew = true,
   showButtonClose = true,
   showButtonDelete = true,
   showButtonSave = true,
+  showSearchInput = true,
 
   onClickButtonNew,
   onClickButtonClose,
   onClickButtonDelete,
-  onClickButtonSave
+  onClickButtonSave,
+  onChangeTextSearch
+
 }) => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return(
     <Box
@@ -41,6 +50,12 @@ export const ToolbarTransaction: React.FC<IToolbarTransactionProps> = ({
       alignItems='center'
       component={Paper}
     >
+
+    {!smDown && showSearchInput && <TextField
+        size='small'
+        label={textSearch}
+        onChange={ev => onChangeTextSearch?.(ev.currentTarget.value)}
+      />}
 
       {showButtonSave && <Button variant='contained'
         color='primary'
@@ -78,11 +93,11 @@ export const ToolbarTransaction: React.FC<IToolbarTransactionProps> = ({
 
       </Button>}
 
-      {(!smDown && showButtonClose &&
+      {(!mdDown && showButtonClose &&
       (showButtonDelete || showButtonNew || showButtonSave))
        && <Divider variant='middle' orientation='vertical'/>}
 
-      {(!smDown && showButtonClose) && <Button variant='outlined'
+      {(!mdDown && showButtonClose) && <Button variant='outlined'
         color='primary'
         onClick={onClickButtonClose}
         disableElevation

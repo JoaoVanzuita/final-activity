@@ -1,2 +1,5 @@
 export * from './manager-pages/manager-menu/ManagerMenu'
+export * from './manager-pages/make-purchase/MakePurchase'
+export * from './employee-pages/make-sale/MakeSale'
 export * from './employee-pages/employee-menu/EmployeeMenu'
+export * from './global-pages/ManageInventory'
