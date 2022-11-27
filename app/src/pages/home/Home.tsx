@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { AuthService } from "../../shared/auth-service/AuthService"
+import { AuthService } from "../../shared/services/auth-service/AuthService"
 
 export const Home = () => {
 

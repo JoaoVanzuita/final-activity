@@ -1,16 +1,17 @@
-import { Box } from '@mui/material'
-import { Route, Routes } from 'react-router-dom'
-import { Home } from './pages/home/Home'
+import { AppRoutes } from './routes'
+import { DrawerMenu } from './shared/components/drawer-menu/DrawerMenu'
+import { DrawerProvider } from './shared/contexts'
+import { AppThemeProvider } from './shared/contexts/ThemeContext'
 
 export const App = () => {
 
   return (
-    <Box>
-      <Routes>
-        <Route path='home' element={<Home/>}/>
-      </Routes>
-    </Box>
+    <AppThemeProvider>
+      <DrawerProvider>
+        <DrawerMenu>
+          <AppRoutes/>
+        </DrawerMenu>
+      </DrawerProvider>
+    </AppThemeProvider>
   )
 }
-
-export default App
