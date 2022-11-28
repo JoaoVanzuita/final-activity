@@ -20,5 +20,5 @@ export class Product {
   costPrice: number
 
   @OneToMany(() => InvoiceItem, item => item.product)
-  itens: InvoiceItem[]
+  items: InvoiceItem[]
 }

@@ -2,8 +2,8 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { InvoiceItem } from "./InvoiceItem"
 
 export enum InvoiceType {
-  purchase = 'purchase_invoice',
-  sale = 'sale_invoice'
+  purchase = 'purchase',
+  sale = 'sale'
 }
 
 @Entity('invoices')
@@ -12,8 +12,8 @@ export class Invoice {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ length: 255 })
-  type: InvoiceType
+  @Column({ name: 'invoice_type', length: 255 })
+  invoiceType: InvoiceType
 
   @Column({ type: "date" })
   date: Date
@@ -22,5 +22,5 @@ export class Invoice {
   totalValue: number
 
   @OneToMany(() => InvoiceItem, item => item.invoice)
-  itens: InvoiceItem[]
+  items: InvoiceItem[]
 }

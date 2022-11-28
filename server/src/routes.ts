@@ -10,18 +10,19 @@ routes.post('/login', new UserController().login)
 
 // routes.use(authMiddleware)
 
+routes.get('/users/logged', new UserController().getLoggedUser)
+
 routes.post('/users', new UserController().create)
 routes.get('/users', new UserController().findAll)
+routes.get('/users/name', new UserController().findByName)
 routes.get('/users/:id', new UserController().findById)
-routes.get('/users/:name', new UserController().findByName)
 routes.put('/users/:id', new UserController().update)
 routes.delete('/users/:id', new UserController().delete)
-routes.get('/users/logged', new UserController().getLoggedUser)
 
 routes.post('/products', new ProductController().create)
 routes.get('/products', new ProductController().findAll)
+routes.get('/products/name', new ProductController().findByName)
 routes.get('/products/:id', new ProductController().findById)
-routes.get('/products/:name', new ProductController().findByName)
 routes.put('/products/:id', new ProductController().update)
 routes.delete('/products/:id', new ProductController().delete)
 

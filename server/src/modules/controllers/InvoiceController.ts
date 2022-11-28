@@ -9,30 +9,32 @@ export class InvoiceController {
 
     const errors = []
 
-    if (!req.body.type) {
+    if (!req.body.invoiceType) {
       errors.push('no type specified')
     }
     if (!req.body.date) {
       errors.push('no date specified')
-    } if (!req.body.itens || req.body.itens.length == 0) {
-      errors.push('no itens specified')
+    }
+    if (!req.body.items || req.body.items.length == 0) {
+      errors.push('no items specified')
     }
     if (errors.length) {
       throw new ServerError(errors.join())
     }
 
-    const { type, date, itens } = req.body
+    const { invoiceType, date, items } = req.body
+
+    console.log(items)
 
     const invoice = InvoiceRepository.create({
-      type: InvoiceType[type],
+      invoiceType,
       date,
-      itens
+      items
     })
 
     const newInvoice = await new InvoiceService().create(invoice)
 
     return res.status(201).json({
-      "status": 201,
       "data": newInvoice
     })
 

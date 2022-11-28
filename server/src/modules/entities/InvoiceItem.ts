@@ -14,11 +14,11 @@ export class InvoiceItem {
   @Column({ name: 'unit_price', type: "numeric", precision: 12, scale: 2 })
   unitPrice: number
 
-  @ManyToOne(() => Invoice, invoice => invoice.itens)
+  @ManyToOne(() => Invoice, invoice => invoice.items)
   @JoinColumn({ name: 'invoice_id' })
   invoice: Invoice
 
-  @ManyToOne(() => Product, product => product.itens)
+  @ManyToOne(() => Product, product => product.items)
   @JoinColumn({ name: 'product_id' })
   product: Product
 }

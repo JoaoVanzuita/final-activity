@@ -1,0 +1,661 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Final Activity",
+    "description": "Atividade final da disciplina de programação 2",
+    "contact" : {
+      "email": "joaog17vanzuita@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api",
+      "description": "api de teste"
+    }
+  ],
+  "paths": {
+    "/products": {
+      "post": {
+        "summary": "Cadastrar produto",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": [] }],
+        "requestBody": {
+          "content":{
+            "application/json": {
+              "schema":{
+                "type": "object",
+                "properties":{
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "unauthorized user"
+          },
+          "400": {
+            "description": "product already exists"
+          },
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "data":{
+                      "type":"number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Obter todos os produtos",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": [] }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/productFull"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/products/name":{
+      "get": {
+        "summary": "Obter produto pelo nome",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "name",
+          "in": "query",
+          "required": true
+        }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/productFull"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/products/{id}":{
+      "get":{
+        "summary": "Obter produto pelo id",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schemas/productFull"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      },
+      "put":{
+        "summary": "Atualizar produto pelo id",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "requestBody": {
+          "content":{
+            "application/json": {
+              "schema": {
+                "type":"object",
+                "$ref": "#components/schemas/productEdit"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/success"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      },
+      "delete":{
+        "summary": "Deletar produto pelo id",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/success"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Efetuar login",
+        "tags": ["Auth"],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "$ref": "#components/schemas/userLogin"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/token"
+          },
+          "400":{
+            "$ref": "#components/schemas/responses/noCredentials"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/users/logged":{
+      "get":{
+        "summary": "Obter usuário logado",
+        "tags": ["Auth"],
+        "security": [{"bearerAuth": [] }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schemas/userFull"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          }
+        }
+      }
+    },
+    "/users":{
+      "post":{
+        "summary": "Cadastrar usuário",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "$ref": "#components/schemas/userEdit"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/created"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          }
+        }
+      },
+      "get":{
+        "summary": "Obter todos os usuários",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/userFull"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/users/name":{
+      "get": {
+        "summary": "Obter usuário pelo nome",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "name",
+          "in": "query",
+          "required": true
+        }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/userFull"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/users/{id}":{
+      "get":{
+        "summary": "Obter usuário pelo id",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "responses":{
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json":{
+                "schema": {
+                  "type": "object",
+                  "$ref": "#components/schemas/userFull"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      },
+      "put":{
+        "summary": "Atualizar usuário pelo id",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "requestBody": {
+          "content":{
+            "application/json": {
+              "schema": {
+                "type":"object",
+                "$ref": "#components/schemas/userEdit"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/success"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      },
+      "delete":{
+        "summary": "Deletar usuário pelo id",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/success"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
+    "/invoices": {
+      "post": {
+        "summary": "Cadastrar nota fiscal",
+        "tags": ["Invoices"],
+        "security": [{"bearerAuth": [] }],
+        "requestBody": {
+          "content":{
+            "application/json": {
+              "schema":{
+                "type": "object",
+                "$ref": "#components/schemas/invoice"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/invoiceCreated"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          }
+        }
+      }
+
+    }
+  },
+  "components":{
+    "schemas":{
+      "productEdit": {
+        "properties":{
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "productFull":{
+        "properties":{
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "costPrice": {
+            "type": "number"
+          },
+          "salePrice": {
+            "type": "number"
+          }
+        }
+      },
+      "userEdit":{
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "userFull":{
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "userLogin": {
+        "properties":{
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "invoice": {
+        "properties":{
+          "invoiceType": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties":{
+                "unitPrice": {
+                  "type": "number"
+                },
+                "product": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "invoiceCreated": {
+          "description": "OK",
+          "content": {
+            "application/json":{
+              "schema":{
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "invoiceType": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "string"
+                  },
+                  "items":{
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties":{
+                        "unitPrice": {
+                          "type": "number"
+                        },
+                        "product": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "quantity": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  "totalValue": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "token": {
+          "description": "OK",
+          "content": {
+            "application/json":{
+              "schema":{
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "created": {
+          "description": "OK",
+          "content": {
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "data":{
+                    "type":"number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "success": {
+          "description": "OK",
+          "content": {
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "data":{
+                    "type":"number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "noCredentials": {
+          "description": "no credentials provided"
+        },
+        "unauthorized": {
+          "description": "unauthorized user"
+        },
+        "notFound":{
+          "description": "not found"
+        }
+      }
+    },
+    "securitySchemes":{
+      "bearerAuth":{
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

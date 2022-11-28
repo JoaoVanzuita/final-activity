@@ -9,12 +9,11 @@ export class ProductController {
       throw new ServerError('no name specified')
     }
 
-    const { name, costPrice } = req.body
+    const { name } = req.body
 
     const product = await new ProductService().create(name)
 
     return res.status(201).json({
-      "status": 201,
       "data": product.id
     })
   }
@@ -22,7 +21,6 @@ export class ProductController {
     const products = await new ProductService().findAll()
 
     return res.json({
-      "status": 200,
       "data": products
     })
   }
@@ -36,12 +34,12 @@ export class ProductController {
     }
 
     return res.json({
-      "status": 200,
       "data": product
     })
   }
   async findByName(req: Request, res: Response) {
-    const name = req.params.name
+
+    const name = <string>req.query.name
 
     const products = await new ProductService().findByName(name)
 
@@ -50,17 +48,17 @@ export class ProductController {
     }
 
     return res.json({
-      "status": 200,
       "data": products
     })
   }
   async update(req: Request, res: Response) {
-    const name = req.body
-    const id = req.params.id
 
     if (!req.body.name) {
       throw new ServerError('no name specified')
     }
+
+    const { name } = req.body
+    const id = req.params.id
 
     const product = await new ProductService().update(id, name)
 
@@ -69,7 +67,6 @@ export class ProductController {
     }
 
     return res.json({
-      "status": 200,
       "data": product.id
     })
   }
@@ -78,8 +75,7 @@ export class ProductController {
 
     const idDeleted = await new ProductService().delete(id)
 
-    return res.status(200).json({
-      "status": 200,
+    return res.json({
       "data": idDeleted
     })
   }

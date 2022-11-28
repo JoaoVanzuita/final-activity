@@ -7,12 +7,12 @@ import { ProductService } from "./ProductService";
 export class InvoiceService {
   async create(invoice: Invoice): Promise<Invoice> {
 
-    const value = this.calculateTotalValue(invoice.itens)
+    const value = this.calculateTotalValue(invoice.items)
     invoice.totalValue = value
 
     const newInvoice = await InvoiceRepository.save(invoice)
 
-    invoice.itens.forEach(async item => {
+    invoice.items.forEach(async item => {
 
       const newItem = InvoiceItemRepository.create({
         quantity: item.quantity,
@@ -25,14 +25,14 @@ export class InvoiceService {
 
       await InvoiceItemRepository.save(newItem)
 
-      if (newInvoice.type == InvoiceType.purchase) {
+      if (newInvoice.invoiceType == InvoiceType.purchase) {
         const averagePrice = await new ProductService().getAveragePrice(item.product)
 
         await new ProductService().updatePrice(item.product.id, averagePrice)
 
         await new ProductService().updateInventory(item.product.id, item.quantity)
       }
-      if (newInvoice.type == InvoiceType.sale) {
+      if (newInvoice.invoiceType == InvoiceType.sale) {
         await new ProductService().updateInventory(item.product.id, -item.quantity)
       }
 

@@ -47,7 +47,7 @@ export class UserService {
 
     return users
   }
-  async update(id, name, email, password): Promise<User> {
+  async update(id, name, email, password, role): Promise<User> {
 
     const user = await UserRepository.findOneBy({
       id
@@ -60,6 +60,7 @@ export class UserService {
     user.name = name
     user.email = email
     user.password = password
+    user.role = role
 
     await UserRepository.save(user)
 

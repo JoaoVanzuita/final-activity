@@ -2,9 +2,15 @@ import { Request, Response } from "express";
 import { ServerError } from "../errors/ServerError";
 import { UserService } from "../service/UserService";
 import bcrypt from 'bcrypt'
+import { UserRole } from "../entities/User";
 
 export class UserController {
   async create(req: Request, res: Response) {
+
+    // if (req.user.role != UserRole.manager) {
+    //   throw new ServerError('unauthorized user', 401)
+    // }
+
     const errors = []
 
     if (!req.body.name) {
@@ -35,7 +41,6 @@ export class UserController {
     )
 
     return res.status(201).json({
-      "status": 201,
       "data": user.id
     })
   }
@@ -44,7 +49,6 @@ export class UserController {
     const users = await new UserService().findAll()
 
     return res.json({
-      "status": 200,
       "data": users
     })
   }
@@ -58,13 +62,12 @@ export class UserController {
     }
 
     return res.json({
-      "status": 200,
       "data": user
     })
   }
 
   async findByName(req: Request, res: Response) {
-    const name = req.params.name
+    const name = <string>req.query.name
 
     const users = await new UserService().findByName(name)
 
@@ -73,7 +76,6 @@ export class UserController {
     }
 
     return res.json({
-      "status": 200,
       "data": users
     })
   }
@@ -94,18 +96,17 @@ export class UserController {
       throw new ServerError(errors.join())
     }
 
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
     const id = req.params.id
 
-    const user = await new UserService().update(id, name, email, password)
+    const user = await new UserService().update(id, name, email, password, role)
 
     if (!user) {
       throw new ServerError('user not found', 404)
     }
 
-    return res.status(200).json({
-      "status": 200,
-      "data": user
+    return res.json({
+      "data": user.id
     })
   }
   async delete(req: Request, res: Response) {
@@ -113,8 +114,7 @@ export class UserController {
 
     const idDeleted = await new UserService().delete(id)
 
-    return res.status(200).json({
-      "status": 200,
+    return res.json({
       "data": idDeleted
     })
   }
@@ -136,13 +136,11 @@ export class UserController {
     const token = await new UserService().login(email, password)
 
     return res.json({
-      "status": 200,
       "data": token
     })
   }
   async getLoggedUser(req: Request, res: Response) {
     return res.json({
-      "status": 200,
       "data": req.user
     })
   }
