@@ -1,12 +1,20 @@
 import { AxiosError } from "axios";
+import { ResponseError } from "../../../../types";
 
 export const errorInterceptor = (error: AxiosError) => {
 
-  //TODO
-
-  if(error.response?.status === 401){
-
+  //...
+  const errorData = {
+    "status": <number>error.response?.status,
+    "data": <{ message: string }>error.response?.data
   }
 
-  return Promise.reject(error)
+  const responseError: ResponseError = {
+    "status": errorData.status,
+    "message": errorData.data.message
+  }
+
+  console.log(responseError)
+
+  return responseError
 }

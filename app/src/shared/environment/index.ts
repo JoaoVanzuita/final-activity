@@ -1,9 +1,5 @@
 export const Environment = {
   /**
-   * Define a quantidade de linhas a ser carregada nas listagens
-   */
-  LINE_LIMIT: 10,
-  /**
    * Texto das caixas de pesquisa
    */
   SEARCH_INPUT: 'Pesquisar...',
@@ -14,5 +10,9 @@ export const Environment = {
   /**
    * Url base para consultas na api
    */
-  URL_BASE: 'http://localhost:8080/api'
+  URL_BASE: 'http://localhost:8080/api',
+  /**
+   * Mensagem genérica para erro desconhecido ao consultar o servidor
+   */
+  SERVER_ERROR: 'Ocorreu um erro desconhecido ao consultar o servidor.'
 }
