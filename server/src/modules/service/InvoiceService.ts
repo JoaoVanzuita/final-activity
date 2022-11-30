@@ -1,14 +1,10 @@
 import { Invoice, InvoiceType } from "../entities/Invoice";
-import { InvoiceItem } from "../entities/InvoiceItem";
 import { InvoiceItemRepository } from "../repositories/InvoiceItemRepository";
 import { InvoiceRepository } from "../repositories/InvoiceRepository";
 import { ProductService } from "./ProductService";
 
 export class InvoiceService {
   async create(invoice: Invoice): Promise<Invoice> {
-
-    const value = this.calculateTotalValue(invoice.items)
-    invoice.totalValue = value
 
     const newInvoice = await InvoiceRepository.save(invoice)
 
@@ -39,15 +35,5 @@ export class InvoiceService {
     })
 
     return newInvoice
-  }
-
-  calculateTotalValue = (itens: InvoiceItem[]): number => {
-    let total = 0
-
-    itens.forEach(item => {
-      total += item.quantity * item.unitPrice
-    })
-
-    return total
   }
 }

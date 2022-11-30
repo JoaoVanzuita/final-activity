@@ -14,14 +14,14 @@ export class ProductController {
     const product = await new ProductService().create(name)
 
     return res.status(201).json({
-      "data": product.id
+      "id": product.id
     })
   }
   async findAll(req: Request, res: Response) {
     const products = await new ProductService().findAll()
 
     return res.json({
-      "data": products
+      "products": products
     })
   }
   async findById(req: Request, res: Response) {
@@ -34,7 +34,7 @@ export class ProductController {
     }
 
     return res.json({
-      "data": product
+      "product": product
     })
   }
   async findByName(req: Request, res: Response) {
@@ -48,7 +48,7 @@ export class ProductController {
     }
 
     return res.json({
-      "data": products
+      "products": products
     })
   }
   async update(req: Request, res: Response) {
@@ -67,7 +67,7 @@ export class ProductController {
     }
 
     return res.json({
-      "data": product.id
+      "id": product.id
     })
   }
   async delete(req: Request, res: Response) {
@@ -76,7 +76,7 @@ export class ProductController {
     const idDeleted = await new ProductService().delete(id)
 
     return res.json({
-      "data": idDeleted
+      "id": idDeleted
     })
   }
 }

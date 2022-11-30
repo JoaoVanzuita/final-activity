@@ -7,9 +7,9 @@ import { UserRole } from "../entities/User";
 export class UserController {
   async create(req: Request, res: Response) {
 
-    // if (req.user.role != UserRole.manager) {
-    //   throw new ServerError('unauthorized user', 401)
-    // }
+    if (req.user.role != UserRole.manager) {
+      throw new ServerError('unauthorized user', 401)
+    }
 
     const errors = []
 
@@ -41,7 +41,7 @@ export class UserController {
     )
 
     return res.status(201).json({
-      "data": user.id
+      "id": user.id
     })
   }
 
@@ -49,7 +49,7 @@ export class UserController {
     const users = await new UserService().findAll()
 
     return res.json({
-      "data": users
+      "users": users
     })
   }
   async findById(req: Request, res: Response) {
@@ -62,7 +62,7 @@ export class UserController {
     }
 
     return res.json({
-      "data": user
+      "user": user
     })
   }
 
@@ -76,7 +76,7 @@ export class UserController {
     }
 
     return res.json({
-      "data": users
+      "users": users
     })
   }
 
@@ -106,7 +106,7 @@ export class UserController {
     }
 
     return res.json({
-      "data": user.id
+      "id": user.id
     })
   }
   async delete(req: Request, res: Response) {
@@ -115,7 +115,7 @@ export class UserController {
     const idDeleted = await new UserService().delete(id)
 
     return res.json({
-      "data": idDeleted
+      "id": idDeleted
     })
   }
   async login(req: Request, res: Response) {
@@ -136,12 +136,12 @@ export class UserController {
     const token = await new UserService().login(email, password)
 
     return res.json({
-      "data": token
+      "token": token
     })
   }
   async getLoggedUser(req: Request, res: Response) {
     return res.json({
-      "data": req.user
+      "user": req.user
     })
   }
 }

@@ -523,6 +523,9 @@
           "date": {
             "type": "string"
           },
+          "totalValue": {
+            "type": "number"
+          },
           "items": {
             "type": "array",
             "items": {
@@ -536,6 +539,9 @@
                   "properties": {
                     "id": {
                       "type": "number"
+                    },
+                    "name": {
+                      "type": "string"
                     }
                   }
                 },
@@ -564,6 +570,9 @@
                   "date": {
                     "type": "string"
                   },
+                  "totalValue": {
+                    "type": "number"
+                  },
                   "items":{
                     "type": "array",
                     "items": {
@@ -577,6 +586,9 @@
                           "properties": {
                             "id": {
                               "type": "number"
+                            },
+                            "name": {
+                              "type": "string"
                             }
                           }
                         },
@@ -585,9 +597,6 @@
                         }
                       }
                     }
-                  },
-                  "totalValue": {
-                    "type": "number"
                   }
                 }
               }

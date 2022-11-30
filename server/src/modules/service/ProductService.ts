@@ -1,4 +1,5 @@
 import { Like } from "typeorm";
+import { InvoiceType } from "../entities/Invoice";
 import { Product } from "../entities/Product";
 import { ServerError } from "../errors/ServerError";
 import { ProductRepository } from "../repositories/ProductRepository";
@@ -55,10 +56,10 @@ export class ProductService {
   }
   async getAveragePrice(product: Product): Promise<number> {
 
-    const result = await ProductRepository.query(`SELECT ROUND( AVG(unit_price), 2) AS averagePrice FROM invoice_itens as item
+    const result = await ProductRepository.query(`SELECT ROUND( AVG(unit_price), 2) AS averagePrice FROM invoice_items as item
     INNER JOIN invoices as invoice
     on invoice.id = item.invoice_id
-    WHERE item.product_id = $1 and invoice.type = 'purchase_invoice';
+    WHERE item.product_id = $1 and invoice_type = 'purchase';
     `, [product.id])
 
     return Number(result[0].averageprice)
@@ -70,7 +71,7 @@ export class ProductService {
     })
 
     product.costPrice = costPrice
-    product.salePrice = costPrice * 1.1
+    product.salePrice = costPrice * 1.15
 
     return await ProductRepository.save(product)
   }

@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColu
 import { Invoice } from "./Invoice"
 import { Product } from "./Product"
 
-@Entity('invoice_itens')
+@Entity('invoice_items')
 export class InvoiceItem {
 
   @PrimaryGeneratedColumn()
@@ -14,7 +14,11 @@ export class InvoiceItem {
   @Column({ name: 'unit_price', type: "numeric", precision: 12, scale: 2 })
   unitPrice: number
 
-  @ManyToOne(() => Invoice, invoice => invoice.items)
+  @ManyToOne(() => Invoice, invoice => invoice.items, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
   @JoinColumn({ name: 'invoice_id' })
   invoice: Invoice
 

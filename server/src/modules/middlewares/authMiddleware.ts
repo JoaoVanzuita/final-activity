@@ -24,7 +24,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     throw new ServerError('unauthorized user', 401)
   }
 
-  const {password:_, ...loggedUser} = user
+  const { password: _, ...loggedUser } = user
 
   req.user = loggedUser
 
