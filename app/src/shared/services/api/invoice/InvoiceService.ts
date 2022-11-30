@@ -23,7 +23,7 @@ const calculateTotalValue = (itens: InvoiceItem[]): number => {
   return total
 }
 
-export const InvoicesProductsService = {
+export const InvoiceService = {
   create,
   calculateTotalValue
 }

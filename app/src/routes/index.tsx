@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { EmployeeMenu, MakePurchase, MakeSale, ManageInventory, ManagerMenu } from "../pages"
-import { ManageEmployees } from "../pages/manager-pages/manage-employees/ManageEmployees"
+import { EmployeeMenu, MakePurchase, MakeSale, ManageEmployees, ManageInventory, ManagerMenu } from "../pages"
 import { useDrawerContext } from "../shared/contexts"
 
 export const AppRoutes = () => {

@@ -3,18 +3,12 @@ import { ResponseError } from "../../../../types";
 
 export const errorInterceptor = (error: AxiosError) => {
 
-  //...
   const errorData = {
     "status": <number>error.response?.status,
     "data": <{ message: string }>error.response?.data
   }
 
-  const responseError: ResponseError = {
-    "status": errorData.status,
-    "message": errorData.data.message
-  }
+  const responseError = new ResponseError(errorData.data.message, errorData.status)
 
-  console.log(responseError)
-
-  return responseError
+  throw responseError
 }

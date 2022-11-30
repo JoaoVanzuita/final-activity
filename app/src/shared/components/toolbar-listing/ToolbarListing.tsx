@@ -20,7 +20,7 @@ interface IToolbarListingProps {
 
 export const ToolbarListing: React.FC<IToolbarListingProps> = ({
   textButtonNew = 'novo',
-  textSearch = Environment.SEARCH_INPUT,
+  textSearch,
 
   showButtonNew = true,
   showButtonClose = true,
@@ -53,8 +53,9 @@ export const ToolbarListing: React.FC<IToolbarListingProps> = ({
 
     {!smDown && showSearchInput && <TextField
         size='small'
-        label={textSearch}
-        onChange={ev => onChangeTextSearch?.(ev.currentTarget.value)}
+        label={Environment.SEARCH_INPUT}
+        value={textSearch}
+        onChange={(ev) => onChangeTextSearch?.(ev.currentTarget.value)}
       />}
 
       {showButtonSave && <Button variant='contained'

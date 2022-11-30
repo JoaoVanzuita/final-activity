@@ -2,7 +2,7 @@ export const Environment = {
   /**
    * Texto das caixas de pesquisa
    */
-  SEARCH_INPUT: 'Pesquisar...',
+  SEARCH_INPUT: 'Pesquisar',
   /**
    * Resposta para listagens sem conteúdo
    */

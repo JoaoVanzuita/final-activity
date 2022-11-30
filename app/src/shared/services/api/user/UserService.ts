@@ -69,7 +69,7 @@ const deleteById = async (id: number): Promise<number | Error> => {
   }
 }
 
-export const UsersService = {
+export const UserService = {
   create,
   getAll,
   getByName,
