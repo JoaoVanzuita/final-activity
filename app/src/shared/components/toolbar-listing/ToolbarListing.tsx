@@ -6,15 +6,17 @@ interface IToolbarListingProps {
   textSearch?: string
 
   showButtonNew?: boolean
-  showButtonClose?: boolean
+  showButtonSaveAndBack?: boolean
+  showButtonBack?: boolean
   showButtonDelete?: boolean
   showButtonSave?: boolean
   showSearchInput?:boolean
 
   onClickButtonNew?: () => void
+  onClickButtonSaveAndBack?: () => void
   onClickButtonDelete?: () => void
   onClickButtonSave?: () => void
-  onClickButtonClose?: () => void
+  onClickButtonBack?: () => void
   onChangeTextSearch?: (newText: string) => void
 }
 
@@ -22,14 +24,16 @@ export const ToolbarListing: React.FC<IToolbarListingProps> = ({
   textButtonNew = 'novo',
   textSearch,
 
-  showButtonNew = true,
-  showButtonClose = true,
-  showButtonDelete = true,
-  showButtonSave = true,
-  showSearchInput = true,
+  showButtonNew = false,
+  showButtonSaveAndBack = false,
+  showButtonBack = false,
+  showButtonDelete = false,
+  showButtonSave = false,
+  showSearchInput = false,
 
   onClickButtonNew,
-  onClickButtonClose,
+  onClickButtonSaveAndBack,
+  onClickButtonBack,
   onClickButtonDelete,
   onClickButtonSave,
   onChangeTextSearch
@@ -51,7 +55,7 @@ export const ToolbarListing: React.FC<IToolbarListingProps> = ({
       component={Paper}
     >
 
-    {!smDown && showSearchInput && <TextField
+    {showSearchInput && <TextField
         size='small'
         label={Environment.SEARCH_INPUT}
         value={textSearch}
@@ -70,6 +74,20 @@ export const ToolbarListing: React.FC<IToolbarListingProps> = ({
 
       </Button>}
 
+      {(showButtonSaveAndBack && !mdDown) && (
+        <Button
+          color='primary'
+          disableElevation
+          variant='outlined'
+          onClick={onClickButtonSaveAndBack}
+          startIcon={<Icon>save</Icon>}
+        >
+          <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+            Salvar e voltar
+          </Typography>
+        </Button>
+      )}
+
       {showButtonDelete && <Button variant='outlined'
         color='primary'
         onClick={onClickButtonDelete}
@@ -82,7 +100,7 @@ export const ToolbarListing: React.FC<IToolbarListingProps> = ({
 
       </Button>}
 
-      {showButtonNew && <Button variant='outlined'
+      {showButtonNew && <Button variant={showButtonSave ? 'outlined' : 'contained'}
         color='primary'
         onClick={onClickButtonNew}
         disableElevation
@@ -94,13 +112,13 @@ export const ToolbarListing: React.FC<IToolbarListingProps> = ({
 
       </Button>}
 
-      {(!mdDown && showButtonClose &&
+      {(!smDown && showButtonBack &&
       (showButtonDelete || showButtonNew || showButtonSave))
        && <Divider variant='middle' orientation='vertical'/>}
 
-      {(!mdDown && showButtonClose) && <Button variant='outlined'
+      {(!smDown && showButtonBack) && <Button variant='outlined'
         color='primary'
-        onClick={onClickButtonClose}
+        onClick={onClickButtonBack}
         disableElevation
         startIcon={<Icon>arrow_back</Icon>}>
 

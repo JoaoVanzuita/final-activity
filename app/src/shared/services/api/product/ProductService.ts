@@ -2,7 +2,7 @@ import { Environment } from "../../../environment"
 import { Product, ResponseError } from "../../../types"
 import { Api } from "../axios-config"
 
-const create = async (productData: Product): Promise<Product | Error> => {
+const create = async (productData: Product): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.post('/products', productData)
@@ -10,7 +10,12 @@ const create = async (productData: Product): Promise<Product | Error> => {
     return data.id
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if (error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
 const getAll = async (): Promise<Product[] | ResponseError> => {
@@ -21,6 +26,11 @@ const getAll = async (): Promise<Product[] | ResponseError> => {
     return data.products
 
   } catch (error) {
+
+    if (error instanceof ResponseError) {
+      return error
+    }
+
     return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
@@ -40,7 +50,7 @@ const getByName = async (name: string): Promise<Product[] | ResponseError> => {
     return new ResponseError(Environment.SERVER_ERROR, 500)
   }
 }
-const getById = async (id: number): Promise<Product | Error> => {
+const getById = async (id: number): Promise<Product | ResponseError> => {
   try {
 
     const { data } = await Api.get(`/products/${id}`)
@@ -48,10 +58,15 @@ const getById = async (id: number): Promise<Product | Error> => {
     return data.product
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if (error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const updateById = async (productData: Product): Promise<number | Error> => {
+const updateById = async (productData: Product): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.put(`/products/${productData.id}`, productData)
@@ -59,10 +74,15 @@ const updateById = async (productData: Product): Promise<number | Error> => {
     return data.id
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if (error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const deleteById = async (id: number): Promise<number | Error> => {
+const deleteById = async (id: number): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.delete(`/products/${id}`)
@@ -70,7 +90,12 @@ const deleteById = async (id: number): Promise<number | Error> => {
     return data.id
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if (error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
 
