@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material"
 import { Alert, AlertTitle, Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { ToolbarListing } from "../../shared/components"
+import { Toolbar } from "../../shared/components"
 import { Environment } from "../../shared/environment"
 import { useDebounce } from "../../shared/hooks"
 import { BasePageLayout } from "../../shared/layouts"
@@ -84,10 +84,10 @@ export const ManageInventory:React.FC = () => {
   return(
     <BasePageLayout
       title='Gerenciar estoque'
-      toolbar={<ToolbarListing
+      toolbar={<Toolbar
         textSearch={search}
-        showButtonNew
         showSearchInput
+        showButtonNew
         showButtonBack
         onClickButtonBack={() => navigate(-1)}
         onClickButtonNew={() => navigate('/gerenciar-estoque/produtos/novo')}

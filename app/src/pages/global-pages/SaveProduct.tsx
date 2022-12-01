@@ -4,7 +4,7 @@ import { FormHandles } from "@unform/core"
 import { Form } from "@unform/web"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { ToolbarListing } from "../../shared/components"
+import { Toolbar } from "../../shared/components"
 import { VTextField } from "../../shared/forms"
 import { BasePageLayout } from "../../shared/layouts"
 import { ProductService } from "../../shared/services"
@@ -95,7 +95,7 @@ export const SaveProduct: React.FC = () => {
 
   return(
     <BasePageLayout title={id === 'novo' ? 'Novo produto' : `Editar ${name}`}
-      toolbar={<ToolbarListing
+      toolbar={<Toolbar
         showButtonSave
         showButtonSaveAndBack
         showButtonNew={id !== 'novo'}
