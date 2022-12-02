@@ -25,28 +25,6 @@ export const ManageInventory:React.FC = () => {
   }, [searchParams])
 
   useEffect(() => {
-    setIsLoading(true)
-    ProductService.getAll()
-    .then(result => {
-      setIsLoading(false)
-
-      if(result instanceof ResponseError){
-
-        Swal.fire({
-          titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
-          text: `Erro: ${result.message}`,
-          icon: 'error',
-          background: alertBackground,
-          color: alertColor
-        })
-        setRows([])
-        return
-      }
-      setRows(result)
-    })
-  },[])
-
-  useEffect(() => {
     debounce(() => {
       setIsLoading(true)
       ProductService.getByName(search)

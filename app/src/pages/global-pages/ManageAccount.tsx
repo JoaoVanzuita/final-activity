@@ -99,6 +99,7 @@ export const ManageAccount = () => {
           }
 
           //TODO: deslogar usuário
+          localStorage.setItem('token', '')
           navigate('/login')
         })
       }

@@ -25,29 +25,6 @@ export const ManageEmployees = () => {
   }, [searchParams])
 
   useEffect(() => {
-    setIsLoading(true)
-
-    UserService.getAll()
-    .then(result => {
-      setIsLoading(false)
-
-      if(result instanceof ResponseError){
-
-        Swal.fire({
-          titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
-          text: result.message.toString(),
-          icon: 'error',
-          background: alertBackground,
-          color: alertColor
-        })
-        setRows([])
-        return
-      }
-      setRows(result)
-    })
-  },[])
-
-  useEffect(() => {
     debounce(() => {
       setIsLoading(true)
       UserService.getByName(search)
