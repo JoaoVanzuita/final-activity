@@ -32,9 +32,9 @@ const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
 })
 
 export const ManageAccount = () => {
-  const alertBackground = useTheme().palette.background.default
-  const alertColor = useTheme().palette.mode === 'light' ? '#000000' : '#ffffff'
   const theme = useTheme()
+  const alertBackground = theme.palette.background.default
+  const alertColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff'
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState<User>()
@@ -118,7 +118,6 @@ export const ManageAccount = () => {
       validate(data, {abortEarly: false})
       .then(dataValid => {
 
-        console.log('valid')
         setIsLoading(true)
 
         UserService.updateAccount(dataValid)

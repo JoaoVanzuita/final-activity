@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { Toolbar } from "../../../shared/components"
+import { MainMenu } from "../../../shared/components/main-menu/MainMenu"
 import { BasePageLayout } from "../../../shared/layouts"
 
 export const EmployeeMenu = () => {
@@ -13,7 +14,9 @@ export const EmployeeMenu = () => {
         onClickButtonManageAccount={() => navigate('/gerenciar-conta')}
       />}
     >
-      Employee menu
+
+      <MainMenu/>
+
     </BasePageLayout>
   )
 }

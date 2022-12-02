@@ -8,7 +8,7 @@ const routes = Router()
 
 routes.post('/login', new UserController().login)
 
-// routes.use(authMiddleware)
+routes.use(authMiddleware)
 
 routes.get('/users/logged', new UserController().getLoggedUser)
 
