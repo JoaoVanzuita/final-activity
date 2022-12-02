@@ -14,6 +14,7 @@ export class ProductController {
     const product = await new ProductService().create(name)
 
     return res.status(201).json({
+      "status": 201,
       "id": product.id
     })
   }
@@ -21,6 +22,7 @@ export class ProductController {
     const products = await new ProductService().findAll()
 
     return res.json({
+      "status": 200,
       "products": products
     })
   }
@@ -34,6 +36,7 @@ export class ProductController {
     }
 
     return res.json({
+      "status": 200,
       "product": product
     })
   }
@@ -48,6 +51,7 @@ export class ProductController {
     }
 
     return res.json({
+      "status": 200,
       "products": products
     })
   }
@@ -67,6 +71,7 @@ export class ProductController {
     }
 
     return res.json({
+      "status": 200,
       "id": product.id
     })
   }
@@ -76,6 +81,7 @@ export class ProductController {
     const idDeleted = await new ProductService().delete(id)
 
     return res.json({
+      "status": 200,
       "id": idDeleted
     })
   }

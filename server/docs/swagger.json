@@ -36,25 +36,13 @@
         },
         "responses": {
           "401": {
-            "description": "unauthorized user"
+            "$ref": "#components/schemas/responses/unauthorized"
           },
           "400": {
             "description": "product already exists"
           },
           "201": {
-            "description": "OK",
-            "content": {
-              "application/json":{
-                "schema":{
-                  "type":"object",
-                  "properties":{
-                    "data":{
-                      "type":"number"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#components/schemas/responses/created"
           }
         }
       },
@@ -85,7 +73,7 @@
         }
       }
     },
-    "/products/name":{
+    "/products/search":{
       "get": {
         "summary": "Obter produto pelo nome",
         "tags": ["Products"],
@@ -267,7 +255,7 @@
           }
         },
         "responses":{
-          "200": {
+          "201": {
             "$ref": "#components/schemas/responses/created"
           },
           "401": {
@@ -302,7 +290,7 @@
         }
       }
     },
-    "/users/name":{
+    "/users/search":{
       "get": {
         "summary": "Obter usuário pelo nome",
         "tags": ["Users"],
@@ -418,6 +406,39 @@
         }
       }
     },
+    "/users/account/{id}":{
+      "put":{
+        "summary": "Atualizar conta do usuário pelo id",
+        "tags": ["Users"],
+        "security": [{"bearerAuth": [] }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "requestBody": {
+          "content":{
+            "application/json": {
+              "schema": {
+                "type":"object",
+                "$ref": "#components/schemas/userEditAccount"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "$ref": "#components/schemas/responses/success"
+          },
+          "401": {
+            "$ref": "#components/schemas/responses/unauthorized"
+          },
+          "404": {
+            "$ref": "#components/schemas/responses/notFound"
+          }
+        }
+      }
+    },
     "/invoices": {
       "post": {
         "summary": "Cadastrar nota fiscal",
@@ -481,10 +502,20 @@
           "email": {
             "type": "string"
           },
-          "password": {
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "userEditAccount":{
+        "properties": {
+          "name": {
             "type": "string"
           },
-          "role": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
             "type": "string"
           }
         }
@@ -610,7 +641,7 @@
               "schema":{
                 "type": "object",
                 "properties": {
-                  "data": {
+                  "token": {
                     "type": "string"
                   }
                 }
@@ -625,7 +656,7 @@
               "schema":{
                 "type":"object",
                 "properties":{
-                  "data":{
+                  "id":{
                     "type":"number"
                   }
                 }
@@ -640,7 +671,7 @@
               "schema":{
                 "type":"object",
                 "properties":{
-                  "data":{
+                  "id":{
                     "type":"number"
                   }
                 }

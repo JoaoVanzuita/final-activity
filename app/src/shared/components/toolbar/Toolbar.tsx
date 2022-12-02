@@ -47,6 +47,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
   onClickButtonSave,
   onClickButtonSaveAndBack,
   onClickButtonNew,
+  onClickButtonDelete,
   onClickButtonAddItem,
   onClickButtonViewOrder,
   onClickButtonManageAccount,
@@ -124,7 +125,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 
         {showButtonDelete && <Button variant='outlined'
           color='primary'
-          onClick={onClickButtonAddItem}
+          onClick={onClickButtonDelete}
           disableElevation
           startIcon={<Icon>delete</Icon>}>
 

@@ -40,6 +40,7 @@ export class InvoiceController {
     }
 
     return res.status(201).json({
+      "status": 201,
       "invoice": newInvoice
     })
 

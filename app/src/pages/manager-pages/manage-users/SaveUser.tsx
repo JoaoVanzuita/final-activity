@@ -1,27 +1,31 @@
 import { Close } from '@mui/icons-material'
-import { Alert, AlertTitle, Box, Grid, IconButton, LinearProgress, Paper } from '@mui/material'
+import { Alert, AlertTitle, Box, Grid, IconButton, LinearProgress, MenuItem, Paper, Typography } from '@mui/material'
 import { FormHandles } from '@unform/core'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Toolbar } from '../../shared/components'
-import { VForm, VTextField } from '../../shared/forms'
-import { BasePageLayout } from '../../shared/layouts'
-import { ProductService } from '../../shared/services'
-import { ResponseError } from '../../shared/types'
+import { Toolbar } from '../../../shared/components'
+import { VForm, VSelect, VTextField } from '../../../shared/forms'
+import { BasePageLayout } from '../../../shared/layouts'
+import { UserService } from '../../../shared/services'
+import { ResponseError, UserRole } from '../../../shared/types'
 import * as yup from 'yup'
-import { IVFormErrors } from '../../shared/forms/IVFormErrors'
+import { IVFormErrors } from '../../../shared/forms/IVFormErrors'
 
-interface IFormData{
+interface IFormData {
   id?: number
   name: string
+  email: string
+  role: UserRole
 }
 
 const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
     id: yup.number().notRequired(),
-    name: yup.string().required().min(3)
+    name: yup.string().required().min(3),
+    email: yup.string().required().email(),
+    role: yup.mixed<UserRole>().oneOf(Object.values(UserRole)).required()
 })
 
-export const SaveProduct: React.FC = () => {
+export const SaveUser = () => {
   const {id = 'novo'} = useParams<'id'>()
   const [isLoading, setIsLoading] = useState(false)
   const [showErrorAlert, setShowErrorAlert] = useState<ResponseError | null>(null)
@@ -36,14 +40,16 @@ export const SaveProduct: React.FC = () => {
   useEffect(() => {
     if(id === 'novo'){
       formRef.current?.setData({
-        name: ''
+        name: '',
+        email: '',
+        role: ''
       })
       return
     }
 
     setIsLoading(true)
 
-    ProductService.getById(Number(id))
+    UserService.getById(Number(id))
     .then(result => {
       setIsLoading(false)
       if(result instanceof ResponseError){
@@ -59,7 +65,7 @@ export const SaveProduct: React.FC = () => {
 
   const handleDelete = (id: number) => {
     if(confirm('Tem certeza?')){
-      ProductService.deleteById(id)
+      UserService.deleteById(id)
       .then(result => {
         if(result instanceof ResponseError){
           setShowErrorAlert(result)
@@ -69,6 +75,7 @@ export const SaveProduct: React.FC = () => {
       })
     }
   }
+
   const handleSave = (data: IFormData) => {
 
     formValidationSchema.
@@ -76,10 +83,9 @@ export const SaveProduct: React.FC = () => {
       .then(dataValid => {
 
         setIsLoading(true)
-
         if (id === 'novo'){
 
-          ProductService.create(data)
+          UserService.create(dataValid)
           .then(result => {
             setIsLoading(false)
 
@@ -94,7 +100,7 @@ export const SaveProduct: React.FC = () => {
 
         data.id = Number(id)
 
-        ProductService.updateById(data)
+        UserService.updateById(dataValid)
         .then(result => {
           setIsLoading(false)
 
@@ -104,6 +110,7 @@ export const SaveProduct: React.FC = () => {
           }
           setShowSuccessAlertEdited(result)
         })
+
       })
       .catch((errors: yup.ValidationError) => {
         const validationErrors: IVFormErrors = {}
@@ -119,24 +126,25 @@ export const SaveProduct: React.FC = () => {
   }
 
   return(
-    <BasePageLayout title={id === 'novo' ? 'Novo Produto' : `Editar ${name}`}
-      toolbar={<Toolbar
-        showButtonSave
-        showButtonSaveAndBack
-        showButtonNew={id !== 'novo'}
-        showButtonDelete={id !== 'novo'}
-        showButtonBack
+    <BasePageLayout title={id === 'novo' ? 'Novo Usuário' : `Editar ${name}`}
+    toolbar={<Toolbar
+      showButtonSave
+      showButtonSaveAndBack
+      showButtonNew={id !== 'novo'}
+      showButtonDelete={id !== 'novo'}
+      showButtonBack
 
-        onClickButtonSave={() => formRef.current?.submitForm()}
-        onClickButtonSaveAndBack={()=> {
-          formRef.current?.submitForm()
-          navigate('/gerenciar-estoque')
-        }}
-        onClickButtonNew={() => navigate('/gerenciar-estoque/produto/novo')}
-        onClickButtonDelete={() => handleDelete(Number(id))}
-        onClickButtonBack={() => navigate('/gerenciar-estoque')}
-      />}
-    >
+      onClickButtonSave={() => formRef.current?.submitForm()}
+      onClickButtonSaveAndBack={()=> {
+        formRef.current?.submitForm()
+        navigate('/gerenciar-usuarios')
+      }}
+      onClickButtonNew={() => navigate('/gerenciar-usuarios/usuario/novo')}
+      onClickButtonDelete={() => handleDelete(Number(id))}
+      onClickButtonBack={() => navigate('/gerenciar-usuarios')}
+    />}
+  >
+
       {showErrorAlert &&
         <Alert
           variant='outlined'
@@ -146,7 +154,7 @@ export const SaveProduct: React.FC = () => {
             <IconButton
               aria-label='close'
               color='inherit'
-              onClick={() => navigate('/gerenciar-estoque')}>
+              onClick={() => navigate('/gerenciar-usuarios')}>
                 <Close fontSize='inherit'/>
               </IconButton>
           }>
@@ -181,8 +189,8 @@ export const SaveProduct: React.FC = () => {
               aria-label='close'
               color='inherit'
               onClick={() => {
+                navigate(`/gerenciar-usuarios/usuario/${showSuccessAlertCreated}`)
                 setShowSuccessAlertCreated(0)
-                navigate(`/gerenciar-estoque/produto/${showSuccessAlertCreated}`)
               }}>
                 <Close fontSize='inherit'/>
               </IconButton>
@@ -221,17 +229,47 @@ export const SaveProduct: React.FC = () => {
               <LinearProgress variant='indeterminate'/>
             </Grid>}
 
+            <Grid item>
+              <Typography variant='h6'>
+                Informações do Usuário
+              </Typography>
+
+            </Grid>
+
             <Grid container item direction='row'>
               <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
-                <VTextField disabled={isLoading} fullWidth label='Nome do produto' name='name' onChange={ev => setName(ev.currentTarget.value)}/>
+                <VTextField disabled={isLoading} fullWidth label='Nome do usuário' name='name' onChange={ev => setName(ev.currentTarget.value)}/>
+              </Grid>
+            </Grid>
+
+            <Grid container item direction='row'>
+              <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
+                <VTextField disabled={isLoading} fullWidth label='Email do usuário' name='email'/>
+              </Grid>
+            </Grid>
+
+            <Grid item>
+              <Typography variant='h6'>
+                Cargo
+              </Typography>
+
+            </Grid>
+
+            <Grid container item direction='row'>
+              <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
+                <VSelect displayEmpty disabled={isLoading} fullWidth name='role' placeholder='Cargo'>
+                  <MenuItem value='manager' >Gerente</MenuItem>
+                  <MenuItem value='employee'>Funcionário</MenuItem>
+                </VSelect>
               </Grid>
             </Grid>
 
           </Grid>
-        </VForm>
 
+        </VForm>
       </Box>
 
-    </BasePageLayout>
+
+  </BasePageLayout>
   )
 }

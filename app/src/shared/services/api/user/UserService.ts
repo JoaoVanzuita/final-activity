@@ -1,8 +1,8 @@
 import { Environment } from "../../../environment"
-import { User } from "../../../types"
+import { ResponseError, User } from "../../../types"
 import { Api } from "../axios-config"
 
-const create = async (userData: User): Promise<User | Error> => {
+const create = async (userData: User): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.post('/users', userData)
@@ -10,10 +10,16 @@ const create = async (userData: User): Promise<User | Error> => {
     return data.id
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if(error instanceof ResponseError) {
+      return error
+    }
+
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const getAll = async (): Promise<User[] | Error> => {
+const getAll = async (): Promise<User[] | ResponseError> => {
   try {
 
     const { data } = await Api.get('/users')
@@ -21,21 +27,31 @@ const getAll = async (): Promise<User[] | Error> => {
     return data.users
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if(error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const getByName = async (name: string): Promise<User[] | Error> => {
+const getByName = async (name: string): Promise<User[] | ResponseError> => {
   try {
 
-    const { data } = await Api.get(`/users/name=${name}`)
+    const { data } = await Api.get(`/users/search?name=${name}`)
 
     return data.users
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if(error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const getById = async (id: number): Promise<User | Error> => {
+const getById = async (id: number): Promise<User | ResponseError> => {
   try {
 
     const { data } = await Api.get(`/users/${id}`)
@@ -43,10 +59,15 @@ const getById = async (id: number): Promise<User | Error> => {
     return data.user
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if(error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const updateById = async (userData: User): Promise<number | Error> => {
+const updateById = async (userData: User): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.put(`/users/${userData.id}`, userData)
@@ -54,10 +75,15 @@ const updateById = async (userData: User): Promise<number | Error> => {
     return data.id
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if(error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const deleteById = async (id: number): Promise<number | Error> => {
+const deleteById = async (id: number): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.delete(`/users/${id}`)
@@ -65,7 +91,12 @@ const deleteById = async (id: number): Promise<number | Error> => {
     return data.id
 
   } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
+
+    if(error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
 

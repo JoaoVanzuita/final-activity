@@ -7,9 +7,9 @@ import { UserRole } from "../entities/User";
 export class UserController {
   async create(req: Request, res: Response) {
 
-    if (req.user.role != UserRole.manager) {
-      throw new ServerError('unauthorized user', 401)
-    }
+    // if (req.user.role != UserRole.manager) {
+    //   throw new ServerError('unauthorized user', 401)
+    // }
 
     const errors = []
 
@@ -19,9 +19,6 @@ export class UserController {
     if (!req.body.email) {
       errors.push('no email specified')
     }
-    if (!req.body.password) {
-      errors.push('no password specified')
-    }
     if (!req.body.role) {
       errors.push('no role specified')
     }
@@ -29,18 +26,19 @@ export class UserController {
       throw new ServerError(errors.join())
     }
 
-    const { name, email, password, role } = req.body
+    const { name, email, role } = req.body
 
-    const encryptedPassword = await bcrypt.hash(password, 10)
+    const encryptedDefaultPassword = await bcrypt.hash('padrao123', 10)
 
     const user = await new UserService().create(
       name,
       email,
-      encryptedPassword,
+      encryptedDefaultPassword,
       role
     )
 
     return res.status(201).json({
+      "status": 201,
       "id": user.id
     })
   }
@@ -49,6 +47,7 @@ export class UserController {
     const users = await new UserService().findAll()
 
     return res.json({
+      "status": 200,
       "users": users
     })
   }
@@ -62,6 +61,7 @@ export class UserController {
     }
 
     return res.json({
+      "status": 200,
       "user": user
     })
   }
@@ -76,11 +76,12 @@ export class UserController {
     }
 
     return res.json({
+      "status": 200,
       "users": users
     })
   }
 
-  async update(req: Request, res: Response) {
+  async updateUser(req: Request, res: Response) {
     const errors = []
 
     if (!req.body.name) {
@@ -89,32 +90,65 @@ export class UserController {
     if (!req.body.email) {
       errors.push('no email specified')
     }
-    if (!req.body.password) {
-      errors.push('no password specified')
-    }
     if (errors.length) {
       throw new ServerError(errors.join())
     }
 
-    const { name, email, password, role } = req.body
+    const { name, email, role } = req.body
     const id = req.params.id
 
-    const user = await new UserService().update(id, name, email, password, role)
+    const user = await new UserService().updateUser(id, name, email, role)
 
     if (!user) {
       throw new ServerError('user not found', 404)
     }
 
     return res.json({
+      "status": 200,
       "id": user.id
     })
   }
+
+  async updateAccount(req: Request, res: Response) {
+    const errors = []
+
+    if (!req.body.name) {
+      errors.push('no name specified')
+    }
+    if (!req.body.password) {
+      errors.push('no password specified')
+    }
+    if (!req.body.email) {
+      errors.push('no email specified')
+    }
+    if (errors.length) {
+      throw new ServerError(errors.join())
+    }
+
+    const { name, email, password } = req.body
+    const id = req.params.id
+
+    const encryptedPassword = await bcrypt.hash(password, 10)
+
+    const user = await new UserService().updateAccount(id, name, email, encryptedPassword)
+
+    if (!user) {
+      throw new ServerError('user not found', 404)
+    }
+
+    return res.json({
+      "status": 200,
+      "id": user.id
+    })
+  }
+
   async delete(req: Request, res: Response) {
     const id = req.params.id
 
     const idDeleted = await new UserService().delete(id)
 
     return res.json({
+      "status": 200,
       "id": idDeleted
     })
   }
@@ -136,11 +170,13 @@ export class UserController {
     const token = await new UserService().login(email, password)
 
     return res.json({
+      "status": 200,
       "token": token
     })
   }
   async getLoggedUser(req: Request, res: Response) {
     return res.json({
+      "status": 200,
       "user": req.user
     })
   }

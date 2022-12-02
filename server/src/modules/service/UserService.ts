@@ -47,7 +47,29 @@ export class UserService {
 
     return users
   }
-  async update(id, name, email, password, role): Promise<User> {
+  async updateUser(id, name, email, role): Promise<User> {
+
+    const user = await UserRepository.findOneBy({
+      id
+    })
+
+    if (!user) {
+      return null
+    }
+
+    user.name = name
+    user.email = email
+    user.role = role
+
+    await UserRepository.save(user)
+
+    const newUser = await UserRepository.findOneBy({
+      id
+    })
+
+    return newUser
+  }
+  async updateAccount(id, name, email, password): Promise<User> {
 
     const user = await UserRepository.findOneBy({
       id
@@ -60,7 +82,6 @@ export class UserService {
     user.name = name
     user.email = email
     user.password = password
-    user.role = role
 
     await UserRepository.save(user)
 
@@ -77,7 +98,7 @@ export class UserService {
     })
 
     if (!user) {
-      throw new ServerError('user not found', 404)
+      return null
     }
 
     await UserRepository.delete({

@@ -67,7 +67,6 @@ export const ManageInventory:React.FC = () => {
         if(result instanceof ResponseError){
 
           setShowErrorAlert(result)
-          setRows([])
           return
         }
         setShowSuccessAlert(id)
@@ -80,7 +79,6 @@ export const ManageInventory:React.FC = () => {
     }
   }
 
-
   return(
     <BasePageLayout
       title='Gerenciar estoque'
@@ -88,13 +86,13 @@ export const ManageInventory:React.FC = () => {
         textSearch={search}
         showSearchInput
         showButtonNew
-        showButtonBack
         onClickButtonBack={() => navigate(-1)}
-        onClickButtonNew={() => navigate('/gerenciar-estoque/produtos/novo')}
+        showButtonBack
+        onClickButtonNew={() => navigate('/gerenciar-estoque/produto/novo')}
         onChangeTextSearch={text => setSearchParams({ search: text }, {replace: true})}
       />}
     >
-      {showErrorAlert != null &&
+      {showErrorAlert &&
         <Alert
           variant='outlined'
           severity='error'
@@ -111,7 +109,6 @@ export const ManageInventory:React.FC = () => {
           Erro: {showErrorAlert.message}
         </Alert>
       }
-
       {showSuccessAlert !== 0 &&
         <Alert
           variant='outlined'
@@ -157,7 +154,7 @@ export const ManageInventory:React.FC = () => {
                   <IconButton size='small' onClick={() => handleDelete(row.id!)}>
                     <Icon>delete</Icon>
                   </IconButton>
-                  <IconButton size='small' onClick={() => navigate(`/gerenciar-estoque/produtos/${row.id}`)}>
+                  <IconButton size='small' onClick={() => navigate(`/gerenciar-estoque/produto/${row.id}`)}>
                     <Icon>edit</Icon>
                   </IconButton>
                 </TableCell>

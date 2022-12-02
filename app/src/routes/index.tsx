@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { EmployeeMenu, MakePurchase, MakeSale, ManageEmployees, ManageInventory, ManagerMenu, SaveProduct } from "../pages"
+import { EmployeeMenu, MakePurchase, MakeSale, ManageEmployees, ManageInventory, ManagerMenu, SaveProduct, SaveUser } from "../pages"
 import { useDrawerContext } from "../shared/contexts"
 
 export const AppRoutes = () => {
@@ -37,8 +37,8 @@ export const AppRoutes = () => {
       },
       {
         icon: 'badge',
-        path: '/gerenciar-funcionarios',
-        label: 'Gerenciar funcionários'
+        path: '/gerenciar-usuarios',
+        label: 'Gerenciar usuários'
       },
     ]);
   }, []);
@@ -50,9 +50,11 @@ export const AppRoutes = () => {
       <Route path='/efetuar-venda' element={<MakeSale/>}/>
       <Route path='/efetuar-compra' element={<MakePurchase/>}/>
       <Route path='/gerenciar-estoque' element={<ManageInventory/>}/>
-      <Route path='/gerenciar-estoque/produtos/:id' element={<SaveProduct/>}/>
-      <Route path='/gerenciar-estoque/produtos/novo' element={<SaveProduct/>}/>
-      <Route path='/gerenciar-funcionarios' element={<ManageEmployees/>}/>
+      <Route path='/gerenciar-estoque/produto/:id' element={<SaveProduct/>}/>
+      <Route path='/gerenciar-estoque/produto/novo' element={<SaveProduct/>}/>
+      <Route path='/gerenciar-usuarios' element={<ManageEmployees/>}/>
+      <Route path='/gerenciar-usuarios/usuario/:id' element={<SaveUser/>}/>
+      <Route path='/gerenciar-usuarios/usuario/novo' element={<SaveUser/>}/>
 
       <Route path='*' element={<Navigate to="/menu-gerente" />}/>
     </Routes>
