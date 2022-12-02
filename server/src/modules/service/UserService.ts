@@ -131,7 +131,7 @@ export class UserService {
     const token = jwt.sign({
       id: user.id
     }, process.env.JWT_PASSWORD, {
-      expiresIn: '1h'
+      expiresIn: '8h'
     })
 
     return token

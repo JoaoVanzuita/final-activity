@@ -7,7 +7,7 @@ import { Toolbar } from '../../../shared/components'
 import { VForm, VSelect, VTextField } from '../../../shared/forms'
 import { BasePageLayout } from '../../../shared/layouts'
 import { UserService } from '../../../shared/services'
-import { ResponseError, UserRole } from '../../../shared/types'
+import { ResponseError, SuccessAlert, UserRole } from '../../../shared/types'
 import * as yup from 'yup'
 import { IVFormErrors } from '../../../shared/forms/IVFormErrors'
 import Swal from 'sweetalert2'
@@ -23,7 +23,7 @@ const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
     id: yup.number().notRequired(),
     name: yup.string().required().min(3),
     email: yup.string().required().email(),
-    role: yup.mixed<UserRole>().oneOf(Object.values(UserRole)).required()
+    role: yup.mixed<UserRole>().oneOf(Object.values(UserRole), 'Cargo deve ser um dos seguintes valores: gerente, funcionário').required()
 })
 
 export const SaveUser = () => {
@@ -31,23 +31,15 @@ export const SaveUser = () => {
   const alertColor = useTheme().palette.mode === 'light' ? '#000000' : '#ffffff'
   const {id = 'novo'} = useParams<'id'>()
   const [isLoading, setIsLoading] = useState(false)
-  const [showErrorAlert, setShowErrorAlert] = useState<ResponseError | null>(null)
   const [name, setName] = useState('')
-  const [showSuccessAlertCreated, setShowSuccessAlertCreated] = useState(0)
-  const [showSuccessAlertDeleted, setShowSuccessAlertDeleted] = useState(0)
-  const [showSuccessAlertEdited, setShowSuccessAlertEdited] = useState(0)
+  const [showSuccessAlert, setShowSuccessAlert] = useState<SuccessAlert | null>(null)
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
 
 
   useEffect(() => {
-      Swal.fire({
-        titleText: 'teste title',
-        text: 'teste conteúdo',
-        icon: 'success',
-        background: alertBackground,
-        color: alertColor
-      })
+
+    setShowSuccessAlert(null)
 
     if(id === 'novo'){
       formRef.current?.setData({
@@ -65,7 +57,13 @@ export const SaveUser = () => {
       setIsLoading(false)
       if(result instanceof ResponseError){
 
-        setShowErrorAlert(result)
+        Swal.fire({
+          titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
+          text: result.message.toString(),
+          icon: 'error',
+          background: alertBackground,
+          color: alertColor
+        })
         return
       }
       setName(result.name)
@@ -74,17 +72,40 @@ export const SaveUser = () => {
 
   }, [id])
 
-  const handleDelete = (id: number) => {
-    if(confirm('Tem certeza?')){
-      UserService.deleteById(id)
-      .then(result => {
-        if(result instanceof ResponseError){
-          setShowErrorAlert(result)
-          return
-        }
-        setShowSuccessAlertDeleted(id)
-      })
-    }
+  const handleDelete = (id:number) => {
+
+    Swal.fire({
+      title: 'Tem certeza de que deseja excluir o registro?',
+      text: 'Essa é uma ação sem volta!',
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'Sim',
+      denyButtonText: 'Cancelar',
+      background: alertBackground,
+      color: alertColor
+    }).then(confirm => {
+      if (confirm.isConfirmed) {
+
+        UserService.deleteById(id)
+        .then(result => {
+          if(result instanceof ResponseError){
+
+            Swal.fire({
+              titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
+              text: `Erro: ${result.message}`,
+              icon: 'error',
+              background: alertBackground,
+              color: alertColor
+            })
+            return
+          }
+          setShowSuccessAlert({
+            title: 'Registro excluído com sucesso',
+            message: `ID: ${result}`,
+          })
+        })
+      }
+    })
   }
 
   const handleSave = (data: IFormData) => {
@@ -101,27 +122,50 @@ export const SaveUser = () => {
             setIsLoading(false)
 
             if(result instanceof ResponseError){
-              setShowErrorAlert(result)
+
+              Swal.fire({
+                titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
+                text: result.message.toString(),
+                icon: 'error',
+                background: alertBackground,
+                color: alertColor
+              })
               return
             }
 
-
-            setShowSuccessAlertCreated(result)
+            setShowSuccessAlert({
+              title: 'Registro criado com sucesso',
+              message: `ID: ${result}`,
+              id: result
+            })
           })
           return
         }
 
         data.id = Number(id)
 
-        UserService.updateById(dataValid)
+        UserService.updateUser(dataValid)
         .then(result => {
           setIsLoading(false)
 
           if(result instanceof ResponseError){
-            setShowErrorAlert(result)
+
+            Swal.fire({
+              titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
+              text: result.message.toString(),
+              icon: 'error',
+              background: alertBackground,
+              color: alertColor
+            })
+
             return
           }
-          setShowSuccessAlertEdited(result)
+
+          setShowSuccessAlert({
+            id: result,
+            title: 'Registro atualizado com sucesso',
+            message: `ID: ${result}`
+          })
         })
 
       })
@@ -155,44 +199,10 @@ export const SaveUser = () => {
       onClickButtonNew={() => navigate('/gerenciar-usuarios/usuario/novo')}
       onClickButtonDelete={() => handleDelete(Number(id))}
       onClickButtonBack={() => navigate('/gerenciar-usuarios')}
-    />}
-  >
+      />}
+    >
 
-      {showErrorAlert &&
-        <Alert
-          variant='outlined'
-          severity='error'
-          sx={{margin:1, width:'auto'}}
-          action={
-            <IconButton
-              aria-label='close'
-              color='inherit'
-              onClick={() => navigate('/gerenciar-usuarios')}>
-                <Close fontSize='inherit'/>
-              </IconButton>
-          }>
-          <AlertTitle>Código: {showErrorAlert.statusCode}</AlertTitle>
-          Erro: {showErrorAlert.message}
-        </Alert>
-      }
-      {showSuccessAlertEdited !== 0 &&
-        <Alert
-          variant='outlined'
-          severity='success'
-          sx={{margin:1, width:'auto'}}
-          action={
-            <IconButton
-              aria-label='close'
-              color='inherit'
-              onClick={() => setShowSuccessAlertEdited(0)}>
-                <Close fontSize='inherit'/>
-              </IconButton>
-          }>
-          <AlertTitle>Código: 200</AlertTitle>
-          ID do registro editado: {showSuccessAlertEdited}
-        </Alert>
-      }
-      {showSuccessAlertCreated !== 0 &&
+      {showSuccessAlert &&
         <Alert
           variant='outlined'
           severity='success'
@@ -202,34 +212,21 @@ export const SaveUser = () => {
               aria-label='close'
               color='inherit'
               onClick={() => {
-                navigate(`/gerenciar-usuarios/usuario/${showSuccessAlertCreated}`)
-                setShowSuccessAlertCreated(0)
-              }}>
-                <Close fontSize='inherit'/>
-              </IconButton>
+                if(showSuccessAlert.id === undefined){
+                  return
+                }
+                if(id === 'novo'){
+                  navigate(`/gerenciar-usuarios/usuario/${showSuccessAlert.id}`)
+                  return
+                }
+                navigate(`/gerenciar-usuarios`)
+              }}
+            >
+              <Close fontSize='inherit'/>
+            </IconButton>
           }>
-          <AlertTitle>Código: 201</AlertTitle>
-          ID do registro criado: {showSuccessAlertCreated}
-        </Alert>
-      }
-      {showSuccessAlertDeleted !== 0 &&
-        <Alert
-          variant='outlined'
-          severity='success'
-          sx={{margin:1, width:'auto'}}
-          action={
-            <IconButton
-              aria-label='close'
-              color='inherit'
-              onClick={() => {
-                setShowSuccessAlertDeleted(0)
-                navigate(`/gerenciar-estoque`)
-              }}>
-                <Close fontSize='inherit'/>
-              </IconButton>
-          }>
-          <AlertTitle>Código: 200</AlertTitle>
-          ID do registro deletado: {showSuccessAlertDeleted}
+          <AlertTitle>{showSuccessAlert.title}</AlertTitle>
+          {showSuccessAlert.message}
         </Alert>
       }
 
@@ -270,7 +267,7 @@ export const SaveUser = () => {
 
             <Grid container item direction='row'>
               <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
-                <VSelect displayEmpty disabled={isLoading} fullWidth name='role' placeholder='Cargo'>
+                <VSelect disabled={isLoading} fullWidth name='role' placeholder='Cargo'>
                   <MenuItem value='manager' >Gerente</MenuItem>
                   <MenuItem value='employee'>Funcionário</MenuItem>
                 </VSelect>
@@ -281,7 +278,6 @@ export const SaveUser = () => {
 
         </VForm>
       </Box>
-
 
   </BasePageLayout>
   )

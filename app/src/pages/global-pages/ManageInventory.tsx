@@ -1,22 +1,23 @@
 import { Close } from "@mui/icons-material"
-import { Alert, AlertTitle, Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Alert, AlertTitle, Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useTheme } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import Swal from "sweetalert2"
 import { Toolbar } from "../../shared/components"
 import { Environment } from "../../shared/environment"
 import { useDebounce } from "../../shared/hooks"
 import { BasePageLayout } from "../../shared/layouts"
 import { ProductService } from "../../shared/services"
-import { Product, ResponseError } from "../../shared/types"
+import { Product, ResponseError, SuccessAlert } from "../../shared/types"
 
 export const ManageInventory:React.FC = () => {
-
+  const alertBackground = useTheme().palette.background.default
+  const alertColor = useTheme().palette.mode === 'light' ? '#000000' : '#ffffff'
   const [searchParams, setSearchParams] = useSearchParams()
   const { debounce } = useDebounce()
   const [rows, setRows] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [showErrorAlert, setShowErrorAlert] = useState<ResponseError | null>(null)
-  const [showSuccessAlert, setShowSuccessAlert] = useState(0)
+  const [showSuccessAlert, setShowSuccessAlert] = useState<SuccessAlert | null>(null)
   const navigate = useNavigate()
 
   const search = useMemo(() => {
@@ -31,11 +32,16 @@ export const ManageInventory:React.FC = () => {
 
       if(result instanceof ResponseError){
 
-        setShowErrorAlert(result)
+        Swal.fire({
+          titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
+          text: `Erro: ${result.message}`,
+          icon: 'error',
+          background: alertBackground,
+          color: alertColor
+        })
         setRows([])
         return
       }
-      setShowErrorAlert(null)
       setRows(result)
     })
   },[])
@@ -49,11 +55,16 @@ export const ManageInventory:React.FC = () => {
 
         if(result instanceof ResponseError){
 
-          setShowErrorAlert(result)
+          Swal.fire({
+            titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
+            text: result.message.toString(),
+            icon: 'error',
+            background: alertBackground,
+            color: alertColor
+          })
           setRows([])
           return
         }
-        setShowErrorAlert(null)
         setRows(result)
       })
     })
@@ -61,22 +72,43 @@ export const ManageInventory:React.FC = () => {
 
   const handleDelete = (id:number) => {
 
-    if(confirm('Tem certeza?')){
-      ProductService.deleteById(id)
-      .then(result => {
-        if(result instanceof ResponseError){
+    Swal.fire({
+      title: 'Tem certeza de que deseja excluir o registro?',
+      text: 'Essa é uma ação sem volta!',
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'Sim',
+      denyButtonText: 'Cancelar',
+      background: alertBackground,
+      color: alertColor
+    }).then(confirm => {
+      if (confirm.isConfirmed) {
 
-          setShowErrorAlert(result)
-          return
-        }
-        setShowSuccessAlert(id)
-        setRows(oldRows => {
-          return [
-            ...oldRows.filter(oldRow => oldRow.id !== id)
-          ]
+      ProductService.deleteById(id)
+        .then(result => {
+          if(result instanceof ResponseError){
+
+            Swal.fire({
+              titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
+              text: result.message.toString(),
+              icon: 'error',
+              background: alertBackground,
+              color: alertColor
+            })
+            return
+          }
+          setShowSuccessAlert({
+            title: 'Registro excluído com sucesso',
+            message: `ID: ${result}`,
+          })
+          setRows(oldRows => {
+            return [
+              ...oldRows.filter(oldRow => oldRow.id !== id)
+            ]
+          })
         })
-      })
-    }
+      }
+    })
   }
 
   return(
@@ -92,38 +124,22 @@ export const ManageInventory:React.FC = () => {
         onChangeTextSearch={text => setSearchParams({ search: text }, {replace: true})}
       />}
     >
-      {showErrorAlert &&
-        <Alert
-          variant='outlined'
-          severity='error'
-          sx={{margin:1, width:'auto'}}
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              onClick={() => setShowErrorAlert(null)}>
-                <Close fontSize="inherit"/>
-              </IconButton>
-          }>
-          <AlertTitle>Código: {showErrorAlert.statusCode}</AlertTitle>
-          Erro: {showErrorAlert.message}
-        </Alert>
-      }
-      {showSuccessAlert !== 0 &&
+      {showSuccessAlert &&
         <Alert
           variant='outlined'
           severity='success'
           sx={{margin:1, width:'auto'}}
           action={
             <IconButton
-              aria-label="close"
-              color="inherit"
-              onClick={() => setShowSuccessAlert(0)}>
-                <Close fontSize="inherit"/>
-              </IconButton>
+              aria-label='close'
+              color='inherit'
+              onClick={() => setShowSuccessAlert(null)}
+            >
+              <Close fontSize='inherit'/>
+            </IconButton>
           }>
-          <AlertTitle>Código: 200</AlertTitle>
-          ID do registro deletado: {showSuccessAlert}
+          <AlertTitle>{showSuccessAlert.title}</AlertTitle>
+          {showSuccessAlert.message}
         </Alert>
       }
 

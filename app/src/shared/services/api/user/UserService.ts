@@ -11,7 +11,7 @@ const create = async (userData: User): Promise<number | ResponseError> => {
 
   } catch (error) {
 
-    if(error instanceof ResponseError) {
+    if (error instanceof ResponseError) {
       return error
     }
 
@@ -28,7 +28,7 @@ const getAll = async (): Promise<User[] | ResponseError> => {
 
   } catch (error) {
 
-    if(error instanceof ResponseError) {
+    if (error instanceof ResponseError) {
       return error
     }
 
@@ -44,7 +44,7 @@ const getByName = async (name: string): Promise<User[] | ResponseError> => {
 
   } catch (error) {
 
-    if(error instanceof ResponseError) {
+    if (error instanceof ResponseError) {
       return error
     }
 
@@ -60,14 +60,14 @@ const getById = async (id: number): Promise<User | ResponseError> => {
 
   } catch (error) {
 
-    if(error instanceof ResponseError) {
+    if (error instanceof ResponseError) {
       return error
     }
 
     return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const updateById = async (userData: User): Promise<number | ResponseError> => {
+const updateUser = async (userData: User): Promise<number | ResponseError> => {
   try {
 
     const { data } = await Api.put(`/users/${userData.id}`, userData)
@@ -76,7 +76,39 @@ const updateById = async (userData: User): Promise<number | ResponseError> => {
 
   } catch (error) {
 
-    if(error instanceof ResponseError) {
+    if (error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+  }
+}
+const getLogged = async (): Promise<User | ResponseError> => {
+  try {
+
+    const { data } = await Api.get(`/users/logged`)
+
+    return data.user
+
+  } catch (error) {
+
+    if (error instanceof ResponseError) {
+      return error
+    }
+
+    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+  }
+}
+const updateAccount = async (userData: User): Promise<number | ResponseError> => {
+  try {
+
+    const { data } = await Api.put(`/users/account/${userData.id}`, userData)
+
+    return data.id
+
+  } catch (error) {
+
+    if (error instanceof ResponseError) {
       return error
     }
 
@@ -92,7 +124,7 @@ const deleteById = async (id: number): Promise<number | ResponseError> => {
 
   } catch (error) {
 
-    if(error instanceof ResponseError) {
+    if (error instanceof ResponseError) {
       return error
     }
 
@@ -105,6 +137,8 @@ export const UserService = {
   getAll,
   getByName,
   getById,
-  updateById,
+  getLogged,
+  updateUser,
+  updateAccount,
   deleteById,
 }

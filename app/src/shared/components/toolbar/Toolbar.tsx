@@ -4,6 +4,7 @@ import { Environment } from "../../environment"
 interface IToolbarProps {
   textButtonNew?: string
   textSearch?: string
+  textButtonDelete?: string
 
   showSearchInput?:boolean
   showButtonSave?: boolean
@@ -30,6 +31,7 @@ interface IToolbarProps {
 
 export const Toolbar: React.FC<IToolbarProps> = ({
   textButtonNew = 'novo',
+  textButtonDelete = 'apagar',
   textSearch,
 
   showSearchInput = false,
@@ -130,7 +132,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
           startIcon={<Icon>delete</Icon>}>
 
           <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
-            apagar
+            {textButtonDelete}
           </Typography>
 
         </Button>}

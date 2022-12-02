@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { EmployeeMenu, MakePurchase, MakeSale, ManageEmployees, ManageInventory, ManagerMenu, SaveProduct, SaveUser } from "../pages"
+import { EmployeeMenu, Login, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, ManagerMenu, SaveProduct, SaveUser } from "../pages"
 import { useDrawerContext } from "../shared/contexts"
 
 export const AppRoutes = () => {
@@ -45,8 +45,10 @@ export const AppRoutes = () => {
 
   return(
     <Routes>
+      <Route path='/login' element={<Login/>}/>
       <Route path='/menu-gerente' element={<ManagerMenu/>}/>
       <Route path='/menu-funcionario' element={<EmployeeMenu/>}/>
+      <Route path='/gerenciar-conta' element={<ManageAccount/>}/>
       <Route path='/efetuar-venda' element={<MakeSale/>}/>
       <Route path='/efetuar-compra' element={<MakePurchase/>}/>
       <Route path='/gerenciar-estoque' element={<ManageInventory/>}/>

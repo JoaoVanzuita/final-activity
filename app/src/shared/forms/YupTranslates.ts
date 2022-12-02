@@ -27,4 +27,5 @@ setLocale({
   boolean: {},
   object: {},
   array: {},
+  
 })
