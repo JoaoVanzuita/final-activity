@@ -1,5 +1,5 @@
 import { Close } from '@mui/icons-material'
-import { Alert, AlertTitle, Box, Grid, IconButton, LinearProgress, MenuItem, Paper, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Grid, IconButton, LinearProgress, MenuItem, Paper, Typography, useTheme } from '@mui/material'
 import { FormHandles } from '@unform/core'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -10,6 +10,7 @@ import { UserService } from '../../../shared/services'
 import { ResponseError, UserRole } from '../../../shared/types'
 import * as yup from 'yup'
 import { IVFormErrors } from '../../../shared/forms/IVFormErrors'
+import Swal from 'sweetalert2'
 
 interface IFormData {
   id?: number
@@ -26,6 +27,8 @@ const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
 })
 
 export const SaveUser = () => {
+  const alertBackground = useTheme().palette.background.default
+  const alertColor = useTheme().palette.mode === 'light' ? '#000000' : '#ffffff'
   const {id = 'novo'} = useParams<'id'>()
   const [isLoading, setIsLoading] = useState(false)
   const [showErrorAlert, setShowErrorAlert] = useState<ResponseError | null>(null)
@@ -38,6 +41,14 @@ export const SaveUser = () => {
 
 
   useEffect(() => {
+      Swal.fire({
+        titleText: 'teste title',
+        text: 'teste conteúdo',
+        icon: 'success',
+        background: alertBackground,
+        color: alertColor
+      })
+
     if(id === 'novo'){
       formRef.current?.setData({
         name: '',
@@ -93,6 +104,8 @@ export const SaveUser = () => {
               setShowErrorAlert(result)
               return
             }
+
+
             setShowSuccessAlertCreated(result)
           })
           return
