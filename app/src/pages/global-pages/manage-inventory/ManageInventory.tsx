@@ -3,12 +3,12 @@ import { Alert, AlertTitle, Icon, IconButton, LinearProgress, Paper, Table, Tabl
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
-import { Toolbar } from "../../shared/components"
-import { Environment } from "../../shared/environment"
-import { useDebounce } from "../../shared/hooks"
-import { BasePageLayout } from "../../shared/layouts"
-import { ProductService } from "../../shared/services"
-import { Product, ResponseError, SuccessAlert } from "../../shared/types"
+import { Toolbar } from "../../../shared/components"
+import { Environment } from "../../../shared/environment"
+import { useDebounce } from "../../../shared/hooks"
+import { BasePageLayout } from "../../../shared/layouts"
+import { ProductService } from "../../../shared/services"
+import { Product, ResponseError, SuccessAlert } from "../../../shared/types"
 
 export const ManageInventory:React.FC = () => {
   const alertBackground = useTheme().palette.background.default

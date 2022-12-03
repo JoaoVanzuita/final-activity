@@ -3,16 +3,16 @@ import { Alert, AlertTitle, Box, Grid, IconButton, LinearProgress, Paper, useMed
 import { FormHandles } from '@unform/core'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ResponseError, SuccessAlert, User, UserRole } from '../../shared/types'
-import { UserService } from '../../shared/services'
-import { IVFormErrors } from '../../shared/forms/IVFormErrors'
-import { BasePageLayout } from '../../shared/layouts'
-import { Toolbar } from '../../shared/components'
-import { VForm, VTextField } from '../../shared/forms'
+import { ResponseError, SuccessAlert, User, UserRole } from '../../../shared/types'
+import { UserService } from '../../../shared/services'
+import { IVFormErrors } from '../../../shared/forms/IVFormErrors'
+import { BasePageLayout } from '../../../shared/layouts'
+import { Toolbar } from '../../../shared/components'
+import { VForm, VTextField } from '../../../shared/forms'
 import Swal from 'sweetalert2'
 import * as yup from 'yup'
 import YupPassword from 'yup-password';
-import { useAuthContext } from '../../shared/contexts'
+import { useAuthContext } from '../../../shared/contexts'
 
 YupPassword(yup);
 

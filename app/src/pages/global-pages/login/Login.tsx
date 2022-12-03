@@ -1,10 +1,10 @@
 import { Box, Button, Card, CardActions, CardContent, Icon, LinearProgress, List, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography, useTheme } from "@mui/material"
 import { useState } from "react"
-import { useAppThemeContext, useAuthContext } from "../../contexts"
+import { useAppThemeContext, useAuthContext } from "../../../shared/contexts"
 import * as yup from 'yup'
 import Swal from "sweetalert2"
-import { ResponseError } from "../../types"
-import { UserService } from "../../services"
+import { ResponseError } from "../../../shared/types"
+import { UserService } from "../../../shared/services"
 import { Navigate, useNavigate } from "react-router-dom"
 
 interface ILoginProps {
@@ -26,7 +26,6 @@ export const Login:React.FC<ILoginProps> = ({children}) => {
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const navigate = useNavigate()
 
   if(isAuthenticated){
     return <>{children}</>
@@ -49,32 +48,7 @@ export const Login:React.FC<ILoginProps> = ({children}) => {
             background: alertBackground,
             color: alertColor
           })
-          return
         }
-
-        UserService.getLogged().then(result => {
-
-          if(result instanceof ResponseError){
-            Swal.fire({
-              titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
-              text: result.message.toString(),
-              icon: 'error',
-              background: alertBackground,
-              color: alertColor
-            })
-            return
-
-          }
-          console.log(result.role)
-          
-          if(result.role === 'manager'){
-            navigate('/menu-gerente')
-            return
-          }
-          if(result.role === 'employee'){
-            navigate('/menu-funcionario')
-          }
-        })
       })
     })
     .catch((errors: yup.ValidationError) => {
@@ -106,8 +80,6 @@ export const Login:React.FC<ILoginProps> = ({children}) => {
       </Box>
 
       <Card>
-
-        {isLoading && <LinearProgress variant='indeterminate'/>}
 
         <CardContent>
           <Box display='flex' flexDirection='column' gap={2} width={250}>

@@ -27,6 +27,7 @@ interface IToolbarProps {
   onClickButtonViewOrder?: () => void
   onClickButtonManageAccount?: () => void
   onClickButtonBack?: () => void
+  onClickButtonExit?: () => void
 }
 
 export const Toolbar: React.FC<IToolbarProps> = ({
@@ -54,12 +55,12 @@ export const Toolbar: React.FC<IToolbarProps> = ({
   onClickButtonViewOrder,
   onClickButtonManageAccount,
   onClickButtonBack,
+  onClickButtonExit,
 
 }) => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const { logout } = useAuthContext()
 
   return(
     <Box
@@ -181,7 +182,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 
         {showButtonExit && <Button variant='outlined'
           color='primary'
-          onClick={logout}
+          onClick={onClickButtonExit}
           disableElevation
           startIcon={<Icon>logout</Icon>}>
 

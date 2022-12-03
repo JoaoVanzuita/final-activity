@@ -37,8 +37,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
     }
 
     setToken(result)
-    console.log(result)
-    localStorage.setItem('token', result.substring(1, result.length-1))
+    localStorage.setItem('token', result)
   }, [])
 
   const handleLogout = useCallback(() => {

@@ -83,22 +83,6 @@ const updateUser = async (userData: User): Promise<number | ResponseError> => {
     return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
   }
 }
-const getLogged = async (): Promise<User | ResponseError> => {
-  try {
-
-    const { data } = await Api.get(`/users/logged`)
-
-    return data.user
-
-  } catch (error) {
-
-    if (error instanceof ResponseError) {
-      return error
-    }
-
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
-}
 const updateAccount = async (userData: User): Promise<number | ResponseError> => {
   try {
 
@@ -137,7 +121,6 @@ export const UserService = {
   getAll,
   getByName,
   getById,
-  getLogged,
   updateUser,
   updateAccount,
   deleteById,
