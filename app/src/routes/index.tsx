@@ -2,14 +2,21 @@ import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import { MainMenu, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, SaveProduct, SaveUser } from "../pages"
 import { useAuthContext, useDrawerContext } from "../shared/contexts";
+import { ResponseError } from "../shared/types";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
   const auth = useAuthContext()
 
-    useEffect(() => {
+  useEffect(() => {
 
-      if(auth.user?.role == 'manager'){
+    auth.getLoggedUser().then(result => {
+
+      if(result instanceof ResponseError){
+        return
+      }
+
+      if(result.role === 'manager'){
 
         setDrawerOptions([
           {
@@ -33,9 +40,8 @@ export const AppRoutes = () => {
             label: 'Efetuar compra'
           }
         ])
-        return
       }
-      if(auth.user?.role == 'employee'){
+      if(result.role === 'employee'){
 
         setDrawerOptions([
           {
@@ -54,7 +60,9 @@ export const AppRoutes = () => {
             label: 'Efetuar venda'
           }
         ])
+
       }
+    })
   }, []);
 
   return(

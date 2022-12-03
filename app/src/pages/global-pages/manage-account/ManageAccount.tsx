@@ -39,16 +39,33 @@ export const ManageAccount = () => {
   const alertColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff'
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [isLoading, setIsLoading] = useState(false)
-  const [user, setUser] = useState<User | null>()
+  const [user, setUser] = useState<User>()
   const [showSuccessAlert, setShowSuccessAlert] = useState<SuccessAlert | null>(null)
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    setUser(auth.user)
-    formRef.current?.setData(auth.user!)
-  }, [])
 
+    setIsLoading(true)
+
+    auth.getLoggedUser()
+    .then(result => {
+      setIsLoading(false)
+      if(result instanceof ResponseError){
+
+        Swal.fire({
+          titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
+          text: result.message.toString(),
+          icon: 'error',
+          background: alertBackground,
+          color: alertColor
+        })
+        return
+      }
+      setUser(result)
+      formRef.current?.setData(result)
+    })
+  }, [])
 
   const handleDelete = (id:number) => {
 

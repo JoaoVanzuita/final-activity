@@ -1,9 +1,11 @@
 import { Box, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useTheme } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
 import { Toolbar } from "../../../shared/components"
 import { useAuthContext } from "../../../shared/contexts"
 import { BasePageLayout } from "../../../shared/layouts"
+import { ResponseError, User } from "../../../shared/types"
 
 export const MainMenu = () => {
   const navigate = useNavigate()
@@ -12,9 +14,33 @@ export const MainMenu = () => {
   const alertColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff'
   const [isLoading, setIsLoading] = useState(false)
   const auth = useAuthContext()
+  const [userData, setUserData ] = useState<User>()
+
+  useEffect(() => {
+
+    setIsLoading(true)
+
+    auth.getLoggedUser()
+    .then(result => {
+      setIsLoading(false)
+      if(result instanceof ResponseError){
+
+        Swal.fire({
+          titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
+          text: result.message.toString(),
+          icon: 'error',
+          background: alertBackground,
+          color: alertColor
+        })
+        return
+      }
+      setUserData(result)
+    })
+
+  }, [])
 
   return(
-    <BasePageLayout title={`Menu Principal ${auth.user?.role === 'manager' ? ' - Gerente' : auth.user?.role == 'employee' ? ' - Funcionário' : ''}`} toolbar={<Toolbar
+    <BasePageLayout title={`Menu Principal ${userData?.role === 'manager' ? ' - Gerente' : userData?.role == 'employee' ? ' - Funcionário' : ''}`} toolbar={<Toolbar
         showButtonManageAccount
         showButtonExit
         onClickButtonManageAccount={() => navigate('/gerenciar-conta')}
@@ -49,16 +75,16 @@ export const MainMenu = () => {
 
           <TableBody>
 
-            {auth.user && <TableRow>
-              <TableCell>{auth.user.id}</TableCell>
-              <TableCell>{auth.user.name}</TableCell>
-              <TableCell>{auth.user.email}</TableCell>
-              <TableCell>{auth.user.role === 'employee' ? 'Funcionário' : 'Gerente'}</TableCell>
+            {userData && <TableRow>
+              <TableCell>{userData.id}</TableCell>
+              <TableCell>{userData.name}</TableCell>
+              <TableCell>{userData.email}</TableCell>
+              <TableCell>{userData.role === 'employee' ? 'Funcionário' : 'Gerente'}</TableCell>
             </TableRow>}
 
           </TableBody>
 
-          {!isLoading && !auth.user && (
+          {!isLoading && !userData && (
             <caption>Usuário não encontrado</caption>
           )}
 

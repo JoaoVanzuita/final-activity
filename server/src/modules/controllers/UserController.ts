@@ -160,11 +160,10 @@ export class UserController {
 
     const { email, password } = req.body
 
-    const result = await new UserService().login(email, password)
+    const token = await new UserService().login(email, password)
 
     return res.json({
-      "token": result.token,
-      "user": result.user
+      "token": token
     })
   }
   async getLoggedUser(req: Request, res: Response) {

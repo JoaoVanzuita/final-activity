@@ -5,7 +5,11 @@ import { Api } from "../axios-config"
 const create = async (userData: User): Promise<number | ResponseError> => {
   try {
 
-    const { data } = await Api.post('/users', userData)
+    const { data } = await Api.post('/users', userData, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
 
     return data.id
 

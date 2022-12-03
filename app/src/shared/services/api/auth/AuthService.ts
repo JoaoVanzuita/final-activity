@@ -2,17 +2,12 @@ import { Environment } from "../../../environment"
 import { ResponseError, User } from "../../../types"
 import { Api } from "../axios-config"
 
-interface ILoginResponse {
-  user: User
-  token: string
-}
-
-const login = async (email: string, password: string): Promise<ILoginResponse | ResponseError> => {
+const login = async (email: string, password: string): Promise<string | ResponseError> => {
   try {
 
     const { data } = await Api.post('/login', { email, password })
 
-    return data
+    return data.token
 
   } catch (error) {
 
@@ -26,7 +21,11 @@ const login = async (email: string, password: string): Promise<ILoginResponse | 
 const getLogged = async (): Promise<User | ResponseError> => {
   try {
 
-    const { data } = await Api.get(`/users/logged`)
+    const { data } = await Api.get(`/users/logged`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
 
     return data.user
 

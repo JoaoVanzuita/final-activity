@@ -1,9 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AuthService } from "../services";
 import { ResponseError, User } from "../types";
 
 interface IAuthContextData {
-  user: User | null
+  isAuthenticated: boolean
   getLoggedUser: () => Promise<User | ResponseError>
   login: (email:string, password:string) => Promise<ResponseError | void>
   logout: () => void
@@ -16,18 +16,21 @@ interface IAuthProviderProps {
 }
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string>()
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
   useEffect(() => {
-    getLoggedUser().then(result => {
+    const token = localStorage.getItem('token')
 
-      if(result instanceof ResponseError){
-        setUser(null)
-        return
-      }
-      setUser(result)
-    })
-  }, [])
+    if(token){
+      setIsAuthenticated(true)
+      setToken(token)
+      return
+    }
+
+    setIsAuthenticated(false)
+    setToken(undefined)
+  }, [isAuthenticated])
 
   const getLoggedUser = useCallback(async () => {
 
@@ -42,18 +45,21 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
       return result
     }
 
-    setUser(result.user)
-    localStorage.setItem('token', result.token)
+    setIsAuthenticated(true)
+    setToken(result)
+    localStorage.setItem('token', result)
   }, [])
 
   const logout = useCallback(() => {
 
-    setUser(null)
+    setIsAuthenticated(false)
+    setToken(undefined)
     localStorage.removeItem('token')
+    window.location.href = window.location.href
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, getLoggedUser, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, getLoggedUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

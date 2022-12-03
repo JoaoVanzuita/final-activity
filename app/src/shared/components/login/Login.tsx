@@ -22,13 +22,13 @@ export const Login: React.FC<ILoginProps> = ( {children} ) => {
   const alertColor = useTheme().palette.mode === 'light' ? '#000000' : '#ffffff'
   const [ isLoading, setIsLoading ] = useState(false)
   const {toggleTheme} = useAppThemeContext();
-  const { login, user} = useAuthContext()
+  const { login, isAuthenticated} = useAuthContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
-  if(user){
+  if(isAuthenticated){
     return <>{children}</>
   }
 
