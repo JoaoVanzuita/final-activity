@@ -1,19 +1,28 @@
 import './shared/forms/YupTranslates'
 import { AppRoutes } from './routes'
 import { DrawerMenu } from './shared/components/drawer-menu/DrawerMenu'
-import { DrawerProvider } from './shared/contexts'
+import { AuthProvider, DrawerProvider } from './shared/contexts'
 import { AppThemeProvider } from './shared/contexts/ThemeContext'
+import { Login } from './shared/components'
 import './App.css'
 
 export const App = () => {
 
   return (
-    <AppThemeProvider>
-      <DrawerProvider>
-        <DrawerMenu>
-          <AppRoutes/>
-        </DrawerMenu>
-      </DrawerProvider>
-    </AppThemeProvider>
+    <AuthProvider>
+      <AppThemeProvider>
+
+        <Login>
+
+          <DrawerProvider>
+            <DrawerMenu>
+              <AppRoutes/>
+            </DrawerMenu>
+          </DrawerProvider>
+
+        </Login>
+        
+      </AppThemeProvider>
+    </AuthProvider>
   )
 }

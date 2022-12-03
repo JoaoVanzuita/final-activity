@@ -113,7 +113,7 @@ export class UserService {
     })
 
     if (!user) {
-      throw new ServerError('invalid email')
+      throw new ServerError('user not found', 404)
     }
 
     const result = await UserRepository

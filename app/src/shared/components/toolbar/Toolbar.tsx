@@ -1,4 +1,5 @@
 import { Box, Button, Icon, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { useAuthContext } from "../../contexts"
 import { Environment } from "../../environment"
 
 interface IToolbarProps {
@@ -26,7 +27,6 @@ interface IToolbarProps {
   onClickButtonViewOrder?: () => void
   onClickButtonManageAccount?: () => void
   onClickButtonBack?: () => void
-  onClickButtonExit?: () => void
 }
 
 export const Toolbar: React.FC<IToolbarProps> = ({
@@ -54,12 +54,12 @@ export const Toolbar: React.FC<IToolbarProps> = ({
   onClickButtonViewOrder,
   onClickButtonManageAccount,
   onClickButtonBack,
-  onClickButtonExit,
 
 }) => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { logout } = useAuthContext()
 
   return(
     <Box
@@ -181,7 +181,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 
         {showButtonExit && <Button variant='outlined'
           color='primary'
-          onClick={onClickButtonExit}
+          onClick={logout}
           disableElevation
           startIcon={<Icon>logout</Icon>}>
 
@@ -203,8 +203,6 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 
         </Button>}
       </Box>
-
-
 
     </Box>
   )

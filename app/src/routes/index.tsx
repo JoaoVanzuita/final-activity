@@ -1,51 +1,73 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { EmployeeMenu, Login, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, ManagerMenu, SaveProduct, SaveUser } from "../pages"
-import { useDrawerContext } from "../shared/contexts"
+import { EmployeeMenu, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, ManagerMenu, SaveProduct, SaveUser } from "../pages"
+import { useAuthContext, useDrawerContext } from "../shared/contexts"
+import { UserService } from "../shared/services"
+import { ResponseError } from "../shared/types"
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
-
-  //TODO: carregar rotas de acordo com o tipo de usuário logado
+  const { isAuthenticated } = useAuthContext()
+  let menuPath = ''
 
   useEffect(() => {
-    setDrawerOptions([
-      {
-        icon: 'home',
-        path: '/menu-gerente',
-        label: 'Menu gerente',
-      },
-      {
-        icon: 'home',
-        path: '/menu-funcionario',
-        label: 'Menu funcionário'
-      },
-      {
-        icon: 'shopping_cart',
-        path: '/efetuar-compra',
-        label: 'Efetuar compra'
-      },
-      {
-        icon: 'shopping_cart',
-        path: '/efetuar-venda',
-        label: 'Efetuar venda'
-      },
-      {
-        icon: 'inventory',
-        path: '/gerenciar-estoque',
-        label: 'Gerenciar estoque'
-      },
-      {
-        icon: 'badge',
-        path: '/gerenciar-usuarios',
-        label: 'Gerenciar usuários'
-      },
-    ]);
-  }, []);
+
+    UserService.getLogged().then(result => {
+      if(result instanceof ResponseError){
+        return
+      }
+
+      if(result.role === 'manager'){
+        setDrawerOptions([
+          {
+            icon: 'home',
+            path: '/menu-gerente',
+            label: 'Menu gerente',
+          },
+          {
+            icon: 'inventory',
+            path: '/gerenciar-estoque',
+            label: 'Gerenciar estoque'
+          },
+          {
+            icon: 'shopping_cart',
+            path: '/efetuar-compra',
+            label: 'Efetuar compra'
+          },
+          {
+            icon: 'badge',
+            path: '/gerenciar-usuarios',
+            label: 'Gerenciar usuários'
+          }
+        ])
+        menuPath = '/menu-gerente'
+        return
+      }
+
+      setDrawerOptions([
+        {
+          icon: 'home',
+          path: '/menu-funcionario',
+          label: 'Menu funcionário'
+        },
+        {
+          icon: 'inventory',
+          path: '/gerenciar-estoque',
+          label: 'Gerenciar estoque'
+        },
+        {
+          icon: 'shopping_cart',
+          path: '/efetuar-venda',
+          label: 'Efetuar venda'
+        }
+      ])
+      menuPath = '/menu-funcionario'
+    })
+  }, [isAuthenticated]);
 
   return(
     <Routes>
-      <Route path='/login' element={<Login/>}/>
+      <Route path='/' element={<ManagerMenu/>}/>
       <Route path='/menu-gerente' element={<ManagerMenu/>}/>
       <Route path='/menu-funcionario' element={<EmployeeMenu/>}/>
       <Route path='/gerenciar-conta' element={<ManageAccount/>}/>
@@ -58,7 +80,7 @@ export const AppRoutes = () => {
       <Route path='/gerenciar-usuarios/usuario/:id' element={<SaveUser/>}/>
       <Route path='/gerenciar-usuarios/usuario/novo' element={<SaveUser/>}/>
 
-      <Route path='*' element={<Navigate to="/menu-gerente" />}/>
+      <Route path='*' element={<Navigate to={menuPath} />}/>
     </Routes>
   )
 }

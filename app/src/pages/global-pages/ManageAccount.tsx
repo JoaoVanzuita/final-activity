@@ -12,6 +12,7 @@ import { VForm, VTextField } from '../../shared/forms'
 import Swal from 'sweetalert2'
 import * as yup from 'yup'
 import YupPassword from 'yup-password';
+import { useAuthContext } from '../../shared/contexts'
 
 YupPassword(yup);
 
@@ -33,6 +34,7 @@ const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
 
 export const ManageAccount = () => {
   const theme = useTheme()
+  const { logout } = useAuthContext()
   const alertBackground = theme.palette.background.default
   const alertColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff'
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,7 +43,6 @@ export const ManageAccount = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState<SuccessAlert | null>(null)
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
-
 
   useEffect(() => {
 
@@ -98,9 +99,8 @@ export const ManageAccount = () => {
             return
           }
 
-          //TODO: deslogar usuário
-          localStorage.setItem('token', '')
-          navigate('/login')
+          logout()
+          navigate('/')
         })
       }
     })
