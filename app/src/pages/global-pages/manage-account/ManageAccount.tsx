@@ -34,39 +34,21 @@ const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
 
 export const ManageAccount = () => {
   const theme = useTheme()
-  const { logout } = useAuthContext()
+  const auth = useAuthContext()
   const alertBackground = theme.palette.background.default
   const alertColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff'
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [isLoading, setIsLoading] = useState(false)
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useState<User | null>()
   const [showSuccessAlert, setShowSuccessAlert] = useState<SuccessAlert | null>(null)
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-
-    setIsLoading(true)
-
-    UserService.getLogged()
-    .then(result => {
-      setIsLoading(false)
-      if(result instanceof ResponseError){
-
-        Swal.fire({
-          titleText: `Ocorreu um erro - Código: ${result.statusCode}`,
-          text: result.message.toString(),
-          icon: 'error',
-          background: alertBackground,
-          color: alertColor
-        })
-        return
-      }
-      setUser(result)
-      formRef.current?.setData(result)
-    })
-
+    setUser(auth.user)
+    formRef.current?.setData(auth.user!)
   }, [])
+
 
   const handleDelete = (id:number) => {
 
@@ -99,8 +81,7 @@ export const ManageAccount = () => {
             return
           }
 
-          logout()
-          navigate('/')
+          auth.logout()
         })
       }
     })
@@ -171,20 +152,10 @@ export const ManageAccount = () => {
       onClickButtonSave={() => formRef.current?.submitForm()}
       onClickButtonSaveAndBack={() => {
         formRef.current?.submitForm()
-        if(user?.role == UserRole.employee){
-          navigate('/menu-funcionario')
-          return
-        }
-        navigate('/menu-gerente')
+        navigate('/')
       }}
       onClickButtonDelete={() => handleDelete(user?.id ?? 0)}
-      onClickButtonBack={() => {
-        if(user?.role == UserRole.employee){
-          navigate('/menu-funcionario')
-          return
-        }
-        navigate('/menu-gerente')
-      }}
+      onClickButtonBack={() => navigate('/')}
       />}
     >
 
