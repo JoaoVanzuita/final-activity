@@ -5,6 +5,11 @@ import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+type LoginResponse = {
+  token:string
+  user: User
+}
+
 export class UserService {
   async create(name: string, email: string, password: string, role: UserRole): Promise<User> {
     const userAlreadyExists = await UserRepository.findOneBy({
@@ -107,7 +112,9 @@ export class UserService {
 
     return id
   }
-  async login(email, password): Promise<string> {
+
+
+  async login(email, password): Promise<LoginResponse> {
     const user = await UserRepository.findOneBy({
       email
     })
@@ -134,6 +141,11 @@ export class UserService {
       expiresIn: '8h'
     })
 
-    return token
+    const response:LoginResponse = {
+      token,
+      user
+    }
+
+    return response
   }
 }

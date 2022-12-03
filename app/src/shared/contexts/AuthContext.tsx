@@ -1,60 +1,64 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
-import { Navigate, useNavigate } from "react-router-dom"
-import { AuthService } from "../services/api/auth/AuthService"
-import { ResponseError } from "../types"
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { AuthService } from "../services";
+import { ResponseError, User } from "../types";
 
 interface IAuthContextData {
-  isAuthenticated: boolean
+  user: User | null
+  getLoggedUser: () => Promise<User | ResponseError>
   login: (email:string, password:string) => Promise<ResponseError | void>
   logout: () => void
 }
 
-const AuthContext = createContext({} as IAuthContextData)
+export const AuthContext = createContext({} as IAuthContextData)
 
 interface IAuthProviderProps {
   children: React.ReactNode
 }
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
-  const [token, setToken] = useState<string>()
-  const navigate = useNavigate()
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    getLoggedUser().then(result => {
 
-    if(token){
-      setToken(token)
-      return
-    }
-    setToken(undefined)
+      if(result instanceof ResponseError){
+        setUser(null)
+        return
+      }
+      setUser(result)
+    })
   }, [])
 
-  const handleLogin = useCallback(async (email:string, password: string):Promise<void | ResponseError> => {
-    const result = await AuthService.auth(email, password)
+  const getLoggedUser = useCallback(async () => {
+
+    return await AuthService.getLogged()
+  }, [])
+
+  const login = useCallback(async (email:string, password: string) => {
+
+    const result = await AuthService.login(email, password)
 
     if(result instanceof ResponseError){
       return result
     }
 
-    setToken(result)
-    localStorage.setItem('token', result)
+    setUser(result.user)
+    localStorage.setItem('token', result.token)
   }, [])
 
-  const handleLogout = useCallback(() => {
+  const logout = useCallback(() => {
 
-    setToken(undefined)
+    setUser(null)
     localStorage.removeItem('token')
-    navigate('/')
-
   }, [])
 
-  const isAuthenticated = useMemo(() => !!token, [token])
-
-  return(
-    <AuthContext.Provider value={{isAuthenticated, login: handleLogin, logout: handleLogout}}>
+  return (
+    <AuthContext.Provider value={{ user, getLoggedUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-export const useAuthContext = () => useContext(AuthContext)
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};

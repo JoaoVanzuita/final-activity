@@ -2,12 +2,17 @@ import { Environment } from "../../../environment"
 import { ResponseError, User } from "../../../types"
 import { Api } from "../axios-config"
 
-const auth = async (email: string, password: string): Promise<string | ResponseError> => {
+interface ILoginResponse {
+  user: User
+  token: string
+}
+
+const login = async (email: string, password: string): Promise<ILoginResponse | ResponseError> => {
   try {
 
     const { data } = await Api.post('/login', { email, password })
 
-    return data.token
+    return data
 
   } catch (error) {
 
@@ -36,6 +41,6 @@ const getLogged = async (): Promise<User | ResponseError> => {
 }
 
 export const AuthService = {
-  auth,
+  login,
   getLogged
 }

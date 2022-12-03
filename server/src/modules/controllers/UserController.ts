@@ -38,7 +38,6 @@ export class UserController {
     )
 
     return res.status(201).json({
-      "status": 201,
       "id": user.id
     })
   }
@@ -47,7 +46,6 @@ export class UserController {
     const users = await new UserService().findAll()
 
     return res.json({
-      "status": 200,
       "users": users
     })
   }
@@ -61,7 +59,6 @@ export class UserController {
     }
 
     return res.json({
-      "status": 200,
       "user": user
     })
   }
@@ -76,7 +73,6 @@ export class UserController {
     }
 
     return res.json({
-      "status": 200,
       "users": users
     })
   }
@@ -104,7 +100,6 @@ export class UserController {
     }
 
     return res.json({
-      "status": 200,
       "id": user.id
     })
   }
@@ -137,7 +132,6 @@ export class UserController {
     }
 
     return res.json({
-      "status": 200,
       "id": user.id
     })
   }
@@ -148,7 +142,6 @@ export class UserController {
     const idDeleted = await new UserService().delete(id)
 
     return res.json({
-      "status": 200,
       "id": idDeleted
     })
   }
@@ -167,16 +160,16 @@ export class UserController {
 
     const { email, password } = req.body
 
-    const token = await new UserService().login(email, password)
+    const result = await new UserService().login(email, password)
 
     return res.json({
-      "status": 200,
-      "token": token
+      "token": result.token,
+      "user": result.user
     })
   }
   async getLoggedUser(req: Request, res: Response) {
+
     return res.json({
-      "status": 200,
       "user": req.user
     })
   }

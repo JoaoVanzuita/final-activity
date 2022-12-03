@@ -4,6 +4,7 @@ import { DrawerMenu } from './shared/components/drawer-menu/DrawerMenu'
 import { AuthProvider, DrawerProvider } from './shared/contexts'
 import { AppThemeProvider } from './shared/contexts/ThemeContext'
 import './App.css'
+import { Login } from './shared/components'
 
 export const App = () => {
 
@@ -11,11 +12,15 @@ export const App = () => {
     <AuthProvider>
       <AppThemeProvider>
 
-        <DrawerProvider>
-          <DrawerMenu>
-            <AppRoutes/>
-          </DrawerMenu>
-        </DrawerProvider>
+        <Login>
+
+          <DrawerProvider>
+            <DrawerMenu>
+              <AppRoutes/>
+            </DrawerMenu>
+          </DrawerProvider>
+
+        </Login>
 
       </AppThemeProvider>
     </AuthProvider>

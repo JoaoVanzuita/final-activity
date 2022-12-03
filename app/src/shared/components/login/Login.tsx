@@ -1,33 +1,34 @@
 import { Box, Button, Card, CardActions, CardContent, Icon, LinearProgress, List, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography, useTheme } from "@mui/material"
 import { useState } from "react"
-import { useAppThemeContext, useAuthContext } from "../../../shared/contexts"
+import { useAppThemeContext, useAuthContext } from "../../contexts"
 import * as yup from 'yup'
 import Swal from "sweetalert2"
-import { ResponseError } from "../../../shared/types"
-import { UserService } from "../../../shared/services"
+import { ResponseError } from "../../types"
+import { UserService } from "../../services"
 import { Navigate, useNavigate } from "react-router-dom"
 
-interface ILoginProps {
-  children: React.ReactNode
-}
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().min(8).required()
 })
 
-export const Login:React.FC<ILoginProps> = ({children}) => {
+interface ILoginProps {
+  children: React.ReactNode
+}
+
+export const Login: React.FC<ILoginProps> = ( {children} ) => {
   const alertBackground = useTheme().palette.background.default
   const alertColor = useTheme().palette.mode === 'light' ? '#000000' : '#ffffff'
-  const { isAuthenticated, login} = useAuthContext()
   const [ isLoading, setIsLoading ] = useState(false)
   const {toggleTheme} = useAppThemeContext();
+  const { login, user} = useAuthContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
-  if(isAuthenticated){
+  if(user){
     return <>{children}</>
   }
 

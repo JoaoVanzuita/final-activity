@@ -1,45 +1,60 @@
 import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import { MainMenu, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, SaveProduct, SaveUser } from "../pages"
-import { useDrawerContext } from "../shared/contexts";
+import { useAuthContext, useDrawerContext } from "../shared/contexts";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
+  const auth = useAuthContext()
 
-  useEffect(() => {
+    useEffect(() => {
 
-    setDrawerOptions([
-      {
-        icon: 'home',
-        path: '/',
-        label: 'Menu gerente',
-      },
-      {
-        icon: 'home',
-        path: '/',
-        label: 'Menu funcionário'
-      },
-      {
-        icon: 'inventory',
-        path: '/gerenciar-estoque',
-        label: 'Gerenciar estoque'
-      },
-      {
-        icon: 'badge',
-        path: '/gerenciar-usuarios',
-        label: 'Gerenciar usuários'
-      },
-      {
-        icon: 'shopping_cart',
-        path: '/efetuar-compra',
-        label: 'Efetuar compra'
-      },
-      {
-        icon: 'shopping_cart',
-        path: '/efetuar-venda',
-        label: 'Efetuar venda'
+      if(auth.user?.role == 'manager'){
+
+        setDrawerOptions([
+          {
+            icon: 'home',
+            path: '/menu-gerente',
+            label: 'Menu gerente',
+          },
+          {
+            icon: 'inventory',
+            path: '/gerenciar-estoque',
+            label: 'Gerenciar estoque'
+          },
+          {
+            icon: 'badge',
+            path: '/gerenciar-usuarios',
+            label: 'Gerenciar usuários'
+          },
+          {
+            icon: 'shopping_cart',
+            path: '/efetuar-compra',
+            label: 'Efetuar compra'
+          }
+        ])
+        return
       }
-    ])
+      if(auth.user?.role == 'employee'){
+
+        setDrawerOptions([
+          {
+            icon: 'home',
+            path: '/menu-funcionario',
+            label: 'Menu funcionário'
+          },
+          {
+            icon: 'inventory',
+            path: '/gerenciar-estoque',
+            label: 'Gerenciar estoque'
+          },
+          {
+            icon: 'shopping_cart',
+            path: '/efetuar-venda',
+            label: 'Efetuar venda'
+          }
+        ])
+      }
   }, []);
 
   return(
