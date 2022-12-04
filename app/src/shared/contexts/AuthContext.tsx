@@ -7,6 +7,7 @@ interface IAuthContextData {
   getLoggedUser: () => Promise<User | ResponseError>
   login: (email:string, password:string) => Promise<ResponseError | void>
   logout: () => void
+  getToken: () => string
 }
 
 export const AuthContext = createContext({} as IAuthContextData)
@@ -32,13 +33,20 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
     setToken(undefined)
   }, [isAuthenticated])
 
+  const getToken = useCallback(() => {
+
+    if(token){
+      return token
+    }
+    return ''
+  },[])
+
   const getLoggedUser = useCallback(async () => {
 
     return await AuthService.getLogged()
   }, [])
 
   const login = useCallback(async (email:string, password: string) => {
-
     const result = await AuthService.login(email, password)
 
     if(result instanceof ResponseError){
@@ -59,7 +67,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, getLoggedUser, login, logout }}>
+    <AuthContext.Provider value={{ getToken, isAuthenticated, getLoggedUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Toolbar } from "../../../shared/components"
+import { useAuthContext } from "../../../shared/contexts"
 import { Environment } from "../../../shared/environment"
 import { useDebounce } from "../../../shared/hooks"
 import { BasePageLayout } from "../../../shared/layouts"
@@ -18,11 +19,32 @@ export const ManageEmployees = () => {
   const [rows, setRows] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showSuccessAlert, setShowSuccessAlert] = useState<SuccessAlert | null>(null)
-    const navigate = useNavigate()
+  const navigate = useNavigate()
+  const [idLoggedUser, setIdLoggedUser] = useState<number>()
+  const { getLoggedUser } = useAuthContext()
 
   const search = useMemo(() => {
     return searchParams.get('search') || ''
   }, [searchParams])
+
+  useEffect(() => {
+
+    getLoggedUser().then(result => {
+
+      if(result instanceof ResponseError){
+        Swal.fire({
+          titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
+          text: result.message.toString(),
+          icon: 'error',
+          background: alertBackground,
+          color: alertColor
+        })
+        return
+      }
+
+      setIdLoggedUser(result.id)
+    })
+  }, [])
 
   useEffect(() => {
     debounce(() => {
@@ -43,7 +65,8 @@ export const ManageEmployees = () => {
           setRows([])
           return
         }
-        setRows(result)
+
+        setRows(result.filter(user => user.id !== idLoggedUser))
       })
     })
   }, [search])
@@ -152,7 +175,7 @@ export const ManageEmployees = () => {
                 </TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>
-                <TableCell>{row.role === 'manager' ? 'Gerente' : 'funcionário'}</TableCell>
+                <TableCell>{row.role === 'manager' ? 'Gerente' : 'Funcionário'}</TableCell>
               </TableRow>
             ))}
           </TableBody>

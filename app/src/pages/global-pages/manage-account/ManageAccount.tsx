@@ -62,6 +62,7 @@ export const ManageAccount = () => {
         })
         return
       }
+
       setUser(result)
       formRef.current?.setData(result)
     })
@@ -205,24 +206,27 @@ export const ManageAccount = () => {
             </Grid>}
 
             <Grid container item direction='row'>
-              <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
+              <Grid item xs={12} sm={10} lg={6} xl={6}>
                 <VTextField disabled={isLoading} fullWidth label='Nome' name='name'/>
               </Grid>
             </Grid>
 
             <Grid container item direction='row'>
-              <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
+              <Grid item xs={12} sm={10} lg={6} xl={6}>
                 <VTextField disabled={isLoading} fullWidth label='Email' name='email'/>
               </Grid>
             </Grid>
 
             <Grid container item direction={smDown ? 'column' : 'row'} spacing={2}>
-              <Grid item xs={6} sm={5} md={4} lg={3} xl={2}>
-                <VTextField disabled={isLoading} type='password' fullWidth label='Senha' name='password' defaultValue=''/>
+
+              <Grid item xs={6} sm={5} lg={3} xl={3}>
+                <VTextField disabled={isLoading} type='password' fullWidth label='Nova senha' name='password'/>
               </Grid>
-              <Grid item xs={6} sm={5} md={4} lg={3} xl={2}>
-                <VTextField disabled={isLoading} type='password' fullWidth label='Confirmar senha' name='passwordConfirmation' defaultValue=''/>
+
+              <Grid item xs={6} sm={5} lg={3} xl={3}>
+                <VTextField disabled={isLoading} type='password' fullWidth label='Confirmar senha' name='passwordConfirmation'/>
               </Grid>
+              
             </Grid>
           </Grid>
 

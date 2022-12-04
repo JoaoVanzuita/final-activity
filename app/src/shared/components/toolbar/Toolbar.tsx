@@ -1,11 +1,11 @@
 import { Box, Button, Icon, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
-import { useAuthContext } from "../../contexts"
 import { Environment } from "../../environment"
 
 interface IToolbarProps {
   textButtonNew?: string
   textSearch?: string
   textButtonDelete?: string
+  textButtonSave?: string
 
   showSearchInput?:boolean
   showButtonSave?: boolean
@@ -33,6 +33,7 @@ interface IToolbarProps {
 export const Toolbar: React.FC<IToolbarProps> = ({
   textButtonNew = 'novo',
   textButtonDelete = 'apagar',
+  textButtonSave = 'salvar',
   textSearch,
 
   showSearchInput = false,
@@ -95,7 +96,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
           startIcon={<Icon>save</Icon>}>
 
           <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
-            salvar
+            {textButtonSave}
           </Typography>
 
         </Button>}

@@ -22,7 +22,7 @@ export const AppRoutes = () => {
           {
             icon: 'home',
             path: '/menu-gerente',
-            label: 'Menu gerente',
+            label: 'Menu principal',
           },
           {
             icon: 'inventory',
@@ -47,7 +47,7 @@ export const AppRoutes = () => {
           {
             icon: 'home',
             path: '/menu-funcionario',
-            label: 'Menu funcionário'
+            label: 'Menu principal'
           },
           {
             icon: 'inventory',
