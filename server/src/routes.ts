@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { InvoiceController } from "./modules/controllers/InvoiceController";
-import { ProductController } from "./modules/controllers/ProductController";
-import { UserController } from "./modules/controllers/UserController";
-import { authMiddleware } from "./modules/middlewares/authMiddleware";
+import { Router } from 'express'
+import { InvoiceController } from './modules/controllers/InvoiceController'
+import { ProductController } from './modules/controllers/ProductController'
+import { UserController } from './modules/controllers/UserController'
+import { authMiddleware } from './modules/middlewares/authMiddleware'
 
 const routes = Router()
 
