@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { ServerError } from "../errors/ServerError";
-import { ProductService } from "../service/ProductService";
+import { Request, Response } from 'express'
+import { ServerError } from '../errors/ServerError'
+import { ProductService } from '../service/ProductService'
 
 export class ProductController {
   async create(req: Request, res: Response) {
@@ -14,16 +14,16 @@ export class ProductController {
     const product = await new ProductService().create(name)
 
     return res.status(201).json({
-      "status": 201,
-      "id": product.id
+      'status': 201,
+      'id': product.id
     })
   }
   async findAll(req: Request, res: Response) {
     const products = await new ProductService().findAll()
 
     return res.json({
-      "status": 200,
-      "products": products
+      'status': 200,
+      'products': products
     })
   }
   async findById(req: Request, res: Response) {
@@ -36,8 +36,8 @@ export class ProductController {
     }
 
     return res.json({
-      "status": 200,
-      "product": product
+      'status': 200,
+      'product': product
     })
   }
   async findByName(req: Request, res: Response) {
@@ -51,8 +51,8 @@ export class ProductController {
     }
 
     return res.json({
-      "status": 200,
-      "products": products
+      'status': 200,
+      'products': products
     })
   }
   async update(req: Request, res: Response) {
@@ -71,8 +71,8 @@ export class ProductController {
     }
 
     return res.json({
-      "status": 200,
-      "id": product.id
+      'status': 200,
+      'id': product.id
     })
   }
   async delete(req: Request, res: Response) {
@@ -81,8 +81,8 @@ export class ProductController {
     const idDeleted = await new ProductService().delete(id)
 
     return res.json({
-      "status": 200,
-      "id": idDeleted
+      'status': 200,
+      'id': idDeleted
     })
   }
 }

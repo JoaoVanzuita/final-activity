@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { ServerError } from "../errors/ServerError";
-import { UserService } from "../service/UserService";
+import { Request, Response } from 'express'
+import { ServerError } from '../errors/ServerError'
+import { UserService } from '../service/UserService'
 import bcrypt from 'bcrypt'
-import { UserRole } from "../entities/User";
+import { UserRole } from '../entities/User'
 
 export class UserController {
   async create(req: Request, res: Response) {
 
-    // if (req.user.role != UserRole.manager) {
-    //   throw new ServerError('unauthorized user', 401)
-    // }
+    if (req.user.role != UserRole.manager) {
+      throw new ServerError('unauthorized user', 401)
+    }
 
     const errors = []
 
@@ -38,7 +38,7 @@ export class UserController {
     )
 
     return res.status(201).json({
-      "id": user.id
+      'id': user.id
     })
   }
 
@@ -46,7 +46,7 @@ export class UserController {
     const users = await new UserService().findAll()
 
     return res.json({
-      "users": users
+      'users': users
     })
   }
   async findById(req: Request, res: Response) {
@@ -59,7 +59,7 @@ export class UserController {
     }
 
     return res.json({
-      "user": user
+      'user': user
     })
   }
 
@@ -73,7 +73,7 @@ export class UserController {
     }
 
     return res.json({
-      "users": users
+      'users': users
     })
   }
 
@@ -100,7 +100,7 @@ export class UserController {
     }
 
     return res.json({
-      "id": user.id
+      'id': user.id
     })
   }
 
@@ -132,7 +132,7 @@ export class UserController {
     }
 
     return res.json({
-      "id": user.id
+      'id': user.id
     })
   }
 
@@ -142,7 +142,7 @@ export class UserController {
     const idDeleted = await new UserService().delete(id)
 
     return res.json({
-      "id": idDeleted
+      'id': idDeleted
     })
   }
   async login(req: Request, res: Response) {
@@ -163,13 +163,13 @@ export class UserController {
     const token = await new UserService().login(email, password)
 
     return res.json({
-      "token": token
+      'token': token
     })
   }
   async getLoggedUser(req: Request, res: Response) {
 
     return res.json({
-      "user": req.user
+      'user': req.user
     })
   }
 }

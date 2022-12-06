@@ -1,109 +1,109 @@
-import { Environment } from "../../../environment"
-import { Product, ResponseError } from "../../../types"
-import { Api } from "../axios-config"
+import { Environment } from '../../../environment'
+import { Product, ResponseError } from '../../../types'
+import { Api } from '../axios-config'
 
 const create = async (productData: Product): Promise<number | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.post('/products', productData)
+		const { data } = await Api.post('/products', productData)
 
-    return data.id
+		return data.id
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 const getAll = async (): Promise<Product[] | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.get('/products')
+		const { data } = await Api.get('/products')
 
-    return data.products
+		return data.products
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 const getByName = async (name: string): Promise<Product[] | ResponseError> => {
 
-  try {
+	try {
 
-    const { data } = await Api.get(`/products/search?name=${name}`)
-    return data.products
+		const { data } = await Api.get(`/products/search?name=${name}`)
+		return data.products
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(Environment.SERVER_ERROR, 500)
-  }
+		return new ResponseError(Environment.SERVER_ERROR, 500)
+	}
 }
 const getById = async (id: number): Promise<Product | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.get(`/products/${id}`)
+		const { data } = await Api.get(`/products/${id}`)
 
-    return data.product
+		return data.product
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 const updateById = async (productData: Product): Promise<number | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.put(`/products/${productData.id}`, productData)
+		const { data } = await Api.put(`/products/${productData.id}`, productData)
 
-    return data.id
+		return data.id
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 const deleteById = async (id: number): Promise<number | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.delete(`/products/${id}`)
+		const { data } = await Api.delete(`/products/${id}`)
 
-    return data.id
+		return data.id
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 
 export const ProductService = {
-  create,
-  getAll,
-  getByName,
-  getById,
-  updateById,
-  deleteById,
+	create,
+	getAll,
+	getByName,
+	getById,
+	updateById,
+	deleteById,
 }

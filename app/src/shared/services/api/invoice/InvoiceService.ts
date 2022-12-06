@@ -1,29 +1,29 @@
-import { Environment } from "../../../environment"
-import { Invoice, InvoiceItem } from "../../../types"
-import { Api } from "../axios-config"
+import { Environment } from '../../../environment'
+import { Invoice, InvoiceItem } from '../../../types'
+import { Api } from '../axios-config'
 
 const create = async (invoiceData: Invoice): Promise<Invoice | Error> => {
-  try {
+	try {
 
-    const { data } = await Api.post('/invoices', invoiceData)
+		const { data } = await Api.post('/invoices', invoiceData)
 
-    return data.invoice
+		return data.invoice
 
-  } catch (error) {
-    return new Error(`${Environment.SERVER_ERROR}`)
-  }
+	} catch (error) {
+		return new Error(`${Environment.SERVER_ERROR}`)
+	}
 }
 const calculateTotalValue = (itens: InvoiceItem[]): number => {
-  let total = 0
+	let total = 0
 
-  itens.forEach(item => {
-    total += item.quantity * item.unitPrice
-  })
+	itens.forEach(item => {
+		total += item.quantity * item.unitPrice
+	})
 
-  return total
+	return total
 }
 
 export const InvoiceService = {
-  create,
-  calculateTotalValue
+	create,
+	calculateTotalValue
 }

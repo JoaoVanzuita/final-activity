@@ -1,26 +1,26 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { InvoiceItem } from "./InvoiceItem"
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { InvoiceItem } from './InvoiceItem'
 
 export enum InvoiceType {
-  purchase = 'purchase',
-  sale = 'sale'
+	purchase = 'purchase',
+	sale = 'sale'
 }
 
 @Entity('invoices')
 export class Invoice {
 
-  @PrimaryGeneratedColumn()
-  id: number
+	@PrimaryGeneratedColumn()
+		id: number
 
-  @Column({ name: 'invoice_type', length: 255 })
-  invoiceType: InvoiceType
+	@Column({ name: 'invoice_type', length: 255 })
+		invoiceType: InvoiceType
 
-  @Column({ type: "date" })
-  date: Date
+	@Column({ type: 'date' })
+		date: Date
 
-  @Column({ name: 'total_price', type: "numeric", precision: 12, scale: 2 })
-  totalValue: number
+	@Column({ name: 'total_price', type: 'numeric', precision: 12, scale: 2 })
+		totalValue: number
 
-  @OneToMany(() => InvoiceItem, item => item.invoice)
-  items: InvoiceItem[]
+	@OneToMany(() => InvoiceItem, item => item.invoice)
+		items: InvoiceItem[]
 }

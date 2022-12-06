@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  final-activity-app:
+    container_name: final-activity-app
+    image: final-activity-app-template
+    build: ./app
+    volumes:
+      - ./app:/app
+    command: >
+      sh -c "npm install && npm run dev"
+    ports:
+      - "5173:5173"
+  final-activity-server:
+    container_name: final-activity-server
+    image: final-activity-server-template
+    build: ./server
+    volumes:
+      - ./server:/app
+    command: >
+      sh -c "npm install --force && npm run dev"
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DB_PORT=5432
+      - DB_USER=final_activity_database
+      - DB_PASSWORD=final_activity
+      - DB_NAME=final_activity_database
+      - DB_HOST=final-activity-database
+      - JWT_PASSWORD=MbQeThWmZq4t7w9z$C&F)J@NcRfUjXn2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B&E
+    depends_on:
+      - final-activity-database
+  final-activity-database:
+    container_name: final-activity-database
+    image: "postgres:14-alpine"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=final_activity_database
+      - POSTGRES_PASSWORD=final_activity
+      - POSTGRES_DB=final_activity_database
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+volumes:
+  pg-data: {}

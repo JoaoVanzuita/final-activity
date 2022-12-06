@@ -1,18 +1,18 @@
-import { useCallback, useRef } from "react"
+import { useCallback, useRef } from 'react'
 
-export const useDebounce = (delay: number = 1000) => {
+export const useDebounce = (delay = 1000) => {
 
-  const debouncing = useRef<NodeJS.Timeout>();
-  const debounce = useCallback((func: () => void) => {
+	const debouncing = useRef<NodeJS.Timeout>()
+	const debounce = useCallback((func: () => void) => {
 
-    if (debouncing.current) {
-      clearTimeout(debouncing.current)
-    }
+		if (debouncing.current) {
+			clearTimeout(debouncing.current)
+		}
 
-    debouncing.current = setTimeout(() => {
-      func()
-    }, delay)
-  }, [delay])
+		debouncing.current = setTimeout(() => {
+			func()
+		}, delay)
+	}, [delay])
 
-  return { debounce }
+	return { debounce }
 }

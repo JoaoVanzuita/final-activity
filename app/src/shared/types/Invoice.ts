@@ -1,14 +1,14 @@
-import { InvoiceItem } from "./InvoiceItem"
+import { InvoiceItem } from './InvoiceItem'
 
 export enum InvoiceType {
-  purchase = 'purchase',
-  sale = 'sale'
+	purchase = 'purchase',
+	sale = 'sale'
 }
 
 export type Invoice = {
-  id?: number
-  date: Date
-  invoiceType: InvoiceType
-  totalValue: number
-  items: InvoiceItem[]
+	id?: number
+	date: Date
+	invoiceType: InvoiceType
+	totalValue: number
+	items: InvoiceItem[]
 }

@@ -1,10 +1,10 @@
 export class ServerError {
-  public readonly message: String
+	public readonly message: string
 
-  public readonly statusCode: number
+	public readonly statusCode: number
 
-  constructor(messsage: String, statusCode = 400) {
-    this.message = messsage
-    this.statusCode = statusCode
-  }
+	constructor(messsage: string, statusCode = 400) {
+		this.message = messsage
+		this.statusCode = statusCode
+	}
 }

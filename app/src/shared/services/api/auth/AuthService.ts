@@ -1,45 +1,45 @@
-import { Environment } from "../../../environment"
-import { ResponseError, User } from "../../../types"
-import { Api } from "../axios-config"
+import { Environment } from '../../../environment'
+import { ResponseError, User } from '../../../types'
+import { Api } from '../axios-config'
 
 const login = async (email: string, password: string): Promise<string | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.post('/login', { email, password })
+		const { data } = await Api.post('/login', { email, password })
 
-    return data.token
+		return data.token
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 const getLogged = async (): Promise<User | ResponseError> => {
-  try {
+	try {
 
-    const { data } = await Api.get(`/users/logged`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+		const { data } = await Api.get('/users/logged', {
+			headers: {
+				'Authorization': `Bearer ${localStorage.getItem('token')}`
+			}
+		})
 
-    return data.user
+		return data.user
 
-  } catch (error) {
+	} catch (error) {
 
-    if (error instanceof ResponseError) {
-      return error
-    }
+		if (error instanceof ResponseError) {
+			return error
+		}
 
-    return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
-  }
+		return new ResponseError(`${Environment.SERVER_ERROR}`, 500)
+	}
 }
 
 export const AuthService = {
-  login,
-  getLogged
+	login,
+	getLogged
 }

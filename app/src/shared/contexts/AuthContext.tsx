@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { AuthService } from "../services";
-import { ResponseError, User } from "../types";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+
+import { AuthService } from '../services'
+import { ResponseError, User } from '../types'
 
 interface IAuthContextData {
   isAuthenticated: boolean
@@ -17,62 +18,62 @@ interface IAuthProviderProps {
 }
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({children}) => {
-  const [token, setToken] = useState<string>()
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+	const [token, setToken] = useState<string>()
+	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
+	useEffect(() => {
+		const token = localStorage.getItem('token')
 
-    if(token){
-      setIsAuthenticated(true)
-      setToken(token)
-      return
-    }
+		if(token){
+			setIsAuthenticated(true)
+			setToken(token)
+			return
+		}
 
-    setIsAuthenticated(false)
-    setToken(undefined)
-  }, [isAuthenticated])
+		setIsAuthenticated(false)
+		setToken(undefined)
+	}, [isAuthenticated])
 
-  const getToken = useCallback(() => {
+	const getToken = useCallback(() => {
 
-    if(token){
-      return token
-    }
-    return ''
-  },[])
+		if(token){
+			return token
+		}
+		return ''
+	},[])
 
-  const getLoggedUser = useCallback(async () => {
+	const getLoggedUser = useCallback(async () => {
 
-    return await AuthService.getLogged()
-  }, [])
+		return await AuthService.getLogged()
+	}, [])
 
-  const login = useCallback(async (email:string, password: string) => {
-    const result = await AuthService.login(email, password)
+	const login = useCallback(async (email:string, password: string) => {
+		const result = await AuthService.login(email, password)
 
-    if(result instanceof ResponseError){
-      return result
-    }
+		if(result instanceof ResponseError){
+			return result
+		}
 
-    setIsAuthenticated(true)
-    setToken(result)
-    localStorage.setItem('token', result)
-  }, [])
+		setIsAuthenticated(true)
+		setToken(result)
+		localStorage.setItem('token', result)
+	}, [])
 
-  const logout = useCallback(() => {
+	const logout = useCallback(() => {
 
-    setIsAuthenticated(false)
-    setToken(undefined)
-    localStorage.removeItem('token')
-    window.location.href = window.location.href
-  }, [])
+		setIsAuthenticated(false)
+		setToken(undefined)
+		localStorage.removeItem('token')
+		window.location.reload()
+	}, [])
 
-  return (
-    <AuthContext.Provider value={{ getToken, isAuthenticated, getLoggedUser, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  )
+	return (
+		<AuthContext.Provider value={{ getToken, isAuthenticated, getLoggedUser, login, logout }}>
+			{children}
+		</AuthContext.Provider>
+	)
 }
 
 export const useAuthContext = () => {
-  return useContext(AuthContext);
-};
+	return useContext(AuthContext)
+}

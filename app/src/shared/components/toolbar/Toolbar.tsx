@@ -1,5 +1,6 @@
-import { Box, Button, Icon, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
-import { Environment } from "../../environment"
+import { Box, Button, Icon, Paper, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+
+import { Environment } from '../../environment'
 
 interface IToolbarProps {
   textButtonNew?: string
@@ -31,181 +32,181 @@ interface IToolbarProps {
 }
 
 export const Toolbar: React.FC<IToolbarProps> = ({
-  textButtonNew = 'novo',
-  textButtonDelete = 'apagar',
-  textButtonSave = 'salvar',
-  textSearch,
+	textButtonNew = 'novo',
+	textButtonDelete = 'apagar',
+	textButtonSave = 'salvar',
+	textSearch,
 
-  showSearchInput = false,
-  showButtonSave = false,
-  showButtonSaveAndBack = false,
-  showButtonNew = false,
-  showButtonDelete = false,
-  showButtonAddItem = false,
-  showButtonViewOrder = false,
-  showButtonManageAccount = false,
-  showButtonExit = false,
-  showButtonBack = false,
+	showSearchInput = false,
+	showButtonSave = false,
+	showButtonSaveAndBack = false,
+	showButtonNew = false,
+	showButtonDelete = false,
+	showButtonAddItem = false,
+	showButtonViewOrder = false,
+	showButtonManageAccount = false,
+	showButtonExit = false,
+	showButtonBack = false,
 
-  onChangeTextSearch,
-  onClickButtonSave,
-  onClickButtonSaveAndBack,
-  onClickButtonNew,
-  onClickButtonDelete,
-  onClickButtonAddItem,
-  onClickButtonViewOrder,
-  onClickButtonManageAccount,
-  onClickButtonBack,
-  onClickButtonExit,
+	onChangeTextSearch,
+	onClickButtonSave,
+	onClickButtonSaveAndBack,
+	onClickButtonNew,
+	onClickButtonDelete,
+	onClickButtonAddItem,
+	onClickButtonViewOrder,
+	onClickButtonManageAccount,
+	onClickButtonBack,
+	onClickButtonExit,
 
 }) => {
-  const theme = useTheme()
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+	const theme = useTheme()
+	const smDown = useMediaQuery(theme.breakpoints.down('sm'))
+	const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
-  return(
-    <Box
-      height={theme.spacing(5)}
-      marginX={1}
-      padding={1}
-      paddingX={2}
-      display='flex'
-      gap={1}
-      alignItems='center'
-      justifyContent='space-between'
-      component={Paper}
-    >
+	return(
+		<Box
+			height={theme.spacing(5)}
+			marginX={1}
+			padding={1}
+			paddingX={2}
+			display='flex'
+			gap={1}
+			alignItems='center'
+			justifyContent='space-between'
+			component={Paper}
+		>
 
-      <Box
-        display='flex'
-        gap={1}
-        alignItems='center'
-      >
-        {showSearchInput && <TextField
-            size='small'
-            label={Environment.SEARCH_INPUT}
-            value={textSearch}
-            onChange={(ev) => onChangeTextSearch?.(ev.currentTarget.value)}
-        />}
+			<Box
+				display='flex'
+				gap={1}
+				alignItems='center'
+			>
+				{showSearchInput && <TextField
+					size='small'
+					label={Environment.SEARCH_INPUT}
+					value={textSearch}
+					onChange={(ev) => onChangeTextSearch?.(ev.currentTarget.value)}
+				/>}
 
-        {showButtonSave && <Button
-          variant='contained'
-          color='primary'
-          onClick={onClickButtonSave}
-          disableElevation
-          startIcon={<Icon>save</Icon>}>
+				{showButtonSave && <Button
+					variant='contained'
+					color='primary'
+					onClick={onClickButtonSave}
+					disableElevation
+					startIcon={<Icon>save</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
-            {textButtonSave}
-          </Typography>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+						{textButtonSave}
+					</Typography>
 
-        </Button>}
+				</Button>}
 
-        {(showButtonSaveAndBack && !mdDown) && (
-          <Button
-            color='primary'
-            disableElevation
-            variant='outlined'
-            onClick={onClickButtonSaveAndBack}
-            startIcon={<Icon>save</Icon>}
-          >
-            <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+				{(showButtonSaveAndBack && !mdDown) && (
+					<Button
+						color='primary'
+						disableElevation
+						variant='outlined'
+						onClick={onClickButtonSaveAndBack}
+						startIcon={<Icon>save</Icon>}
+					>
+						<Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
               Salvar e voltar
-            </Typography>
-          </Button>
-        )}
+						</Typography>
+					</Button>
+				)}
 
-        {showButtonNew && <Button variant={showButtonSave ? 'outlined' : 'contained'}
-          color='primary'
-          onClick={onClickButtonNew}
-          disableElevation
-          startIcon={<Icon>add</Icon>}>
+				{showButtonNew && <Button variant={showButtonSave ? 'outlined' : 'contained'}
+					color='primary'
+					onClick={onClickButtonNew}
+					disableElevation
+					startIcon={<Icon>add</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
-            {textButtonNew}
-          </Typography>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+						{textButtonNew}
+					</Typography>
 
-        </Button>}
+				</Button>}
 
-        {showButtonDelete && <Button variant='outlined'
-          color='primary'
-          onClick={onClickButtonDelete}
-          disableElevation
-          startIcon={<Icon>delete</Icon>}>
+				{showButtonDelete && <Button variant='outlined'
+					color='primary'
+					onClick={onClickButtonDelete}
+					disableElevation
+					startIcon={<Icon>delete</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
-            {textButtonDelete}
-          </Typography>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+						{textButtonDelete}
+					</Typography>
 
-        </Button>}
+				</Button>}
 
-        {showButtonAddItem && <Button variant='outlined'
-          color='primary'
-          onClick={onClickButtonAddItem}
-          disableElevation
-          startIcon={<Icon>add</Icon>}>
+				{showButtonAddItem && <Button variant='outlined'
+					color='primary'
+					onClick={onClickButtonAddItem}
+					disableElevation
+					startIcon={<Icon>add</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
             adicionar item
-          </Typography>
+					</Typography>
 
-        </Button>}
+				</Button>}
 
-        {showButtonViewOrder && <Button variant='outlined'
-          color='primary'
-          onClick={onClickButtonViewOrder}
-          disableElevation
-          startIcon={<Icon>view_list</Icon>}>
+				{showButtonViewOrder && <Button variant='outlined'
+					color='primary'
+					onClick={onClickButtonViewOrder}
+					disableElevation
+					startIcon={<Icon>view_list</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
             visualizar pedido
-          </Typography>
+					</Typography>
 
-        </Button>}
+				</Button>}
 
-        {showButtonManageAccount && <Button variant='contained'
-          color='primary'
-          onClick={onClickButtonManageAccount}
-          disableElevation
-          startIcon={<Icon>manage_accounts</Icon>}>
+				{showButtonManageAccount && <Button variant='contained'
+					color='primary'
+					onClick={onClickButtonManageAccount}
+					disableElevation
+					startIcon={<Icon>manage_accounts</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
             editar conta
-          </Typography>
+					</Typography>
 
-        </Button>}
-      </Box>
-      <Box
-        display='flex'
-        gap={1}
-        alignItems='center'
-      >
+				</Button>}
+			</Box>
+			<Box
+				display='flex'
+				gap={1}
+				alignItems='center'
+			>
 
-        {showButtonExit && <Button variant='outlined'
-          color='primary'
-          onClick={onClickButtonExit}
-          disableElevation
-          startIcon={<Icon>logout</Icon>}>
+				{showButtonExit && <Button variant='outlined'
+					color='primary'
+					onClick={onClickButtonExit}
+					disableElevation
+					startIcon={<Icon>logout</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
             sair
-          </Typography>
+					</Typography>
 
-        </Button>}
+				</Button>}
 
-        {(!smDown && showButtonBack) && <Button variant='outlined'
-          color='primary'
-          onClick={onClickButtonBack}
-          disableElevation
-          startIcon={<Icon>arrow_back</Icon>}>
+				{(!smDown && showButtonBack) && <Button variant='outlined'
+					color='primary'
+					onClick={onClickButtonBack}
+					disableElevation
+					startIcon={<Icon>arrow_back</Icon>}>
 
-          <Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
+					<Typography variant='button' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
             voltar
-          </Typography>
+					</Typography>
 
-        </Button>}
-      </Box>
+				</Button>}
+			</Box>
 
-    </Box>
-  )
+		</Box>
+	)
 }
