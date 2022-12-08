@@ -6,10 +6,10 @@ import Swal from 'sweetalert2'
 import { TableBodySelectedProduct, Toolbar } from '../../../shared/components'
 import { useInvoiceItemsContext } from '../../../shared/contexts'
 import { Environment } from '../../../shared/environment'
-import { currencyMask, quantityMask } from '../../../shared/functions'
+import { currencyMask } from '../../../shared/functions'
 import { useDebounce } from '../../../shared/hooks'
 import { BasePageLayout } from '../../../shared/layouts'
-import { InvoiceService, ProductService } from '../../../shared/services'
+import { GenerateInvoice, InvoiceService, ProductService } from '../../../shared/services'
 import { Invoice, InvoiceItem, InvoiceType, Product, ResponseError } from '../../../shared/types'
 
 export const MakePurchase = () => {
@@ -25,7 +25,7 @@ export const MakePurchase = () => {
 	const navigate = useNavigate()
 	const { items, setItems} = useInvoiceItemsContext()
 	const [openDialogAddItems, setOpenDialogAddItems] = useState(false)
-	const [quantity, setQuantity] = useState('')
+	const [quantity, setQuantity] = useState(1)
 	const [unitPrice, setUnitPrice] = useState('')
 
 	const search = useMemo(() => {
@@ -112,7 +112,7 @@ export const MakePurchase = () => {
 
 		setOpenDialogAddItems(false)
 
-		if(!quantity.length || !unitPrice.length){
+		if(!quantity || !unitPrice.length){
 			Swal.fire({
 				titleText:'Valores inválidos',
 				text: 'Preencha os campos corretamente',
@@ -133,7 +133,7 @@ export const MakePurchase = () => {
 
 		setItems([...items, newItem])
 		setSelectedProduct(undefined)
-		setQuantity('')
+		setQuantity(1)
 		setUnitPrice('')
 	}
 
@@ -170,10 +170,8 @@ export const MakePurchase = () => {
 				return
 			}
 
-			//TODO: emitir relatório com result
-
-			alert(result.id)
-
+			setItems([])
+			GenerateInvoice.create(result)
 		})
 	}
 
@@ -230,8 +228,11 @@ export const MakePurchase = () => {
 									label='Preço unitário (R$)'
 								/>
 								<TextField
+									fullWidth
 									value={quantity}
-									onChange={ev => setQuantity(quantityMask(ev))}
+									type='number'
+									inputProps={{ min:1}}
+									onChange={ev => setQuantity(Number(ev.currentTarget.value))}
 									margin='normal'
 									variant='outlined'
 									id='quantity'
@@ -245,7 +246,7 @@ export const MakePurchase = () => {
 					<DialogActions>
           	<Button onClick={() => {
 							setOpenDialogAddItems(false)
-							setQuantity('')
+							setQuantity(1)
 							setUnitPrice('')
 						}}>Cancelar</Button>
           	<Button onClick={handleSaveItem}>Salvar</Button>

@@ -76,7 +76,7 @@ export const ViewOrder = () => {
 									<TableHead>
 										<TableRow>
 											<TableCell>Produto</TableCell>
-											<TableCell>Preço</TableCell>
+											<TableCell>Preço unitário</TableCell>
 											<TableCell>Quantidade</TableCell>
 										</TableRow>
 									</TableHead>
@@ -137,7 +137,7 @@ export const ViewOrder = () => {
 														<Typography variant='body1'> Preço unitário </Typography>
 													</TableCell>
 													<TableCell sx={{ border: 'none' }}>
-														<Typography variant='body1'> {selectedItem ? selectedItem.unitPrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) : ''} </Typography>
+														<Typography variant='body1'> {selectedItem ? `${selectedItem.unitPrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}` : ''} </Typography>
 													</TableCell>
 												</TableRow>
 

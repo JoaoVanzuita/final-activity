@@ -22,6 +22,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({children, title,
 					<Icon>menu</Icon>
 				</IconButton>}
 				<Typography
+					paddingLeft={5}
 					overflow='hidden'
 					whiteSpace='nowrap'
 					textOverflow='elipses'

@@ -4,7 +4,7 @@ import { Product } from '../../types'
 
 interface ITableBodySelectedProductProps {
 	selectedProduct: Product | undefined
-	showRowCostPrice: boolean
+	showRowCostPrice?: boolean
 }
 
 export const TableBodySelectedProduct:React.FC<ITableBodySelectedProductProps> = ( { selectedProduct, showRowCostPrice = false }) => {
@@ -34,7 +34,7 @@ export const TableBodySelectedProduct:React.FC<ITableBodySelectedProductProps> =
 					<Typography variant='body1'> Preço de custo </Typography>
 				</TableCell>
 				<TableCell sx={{ border: 'none' }}>
-					<Typography variant='body1'> {selectedProduct ? selectedProduct?.costPrice : ''} </Typography>
+					<Typography variant='body1'> {selectedProduct?.costPrice ? selectedProduct?.costPrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) : ''} </Typography>
 				</TableCell>
 			</TableRow>}
 
@@ -43,7 +43,7 @@ export const TableBodySelectedProduct:React.FC<ITableBodySelectedProductProps> =
 					<Typography variant='body1'> Preço de venda </Typography>
 				</TableCell>
 				<TableCell sx={{ border: 'none' }}>
-					<Typography variant='body1'> {selectedProduct ? selectedProduct?.salePrice : ''} </Typography>
+					<Typography variant='body1'> {selectedProduct?.salePrice ? selectedProduct?.salePrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) : ''} </Typography>
 				</TableCell>
 			</TableRow>
 
