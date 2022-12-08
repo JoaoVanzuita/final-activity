@@ -1,11 +1,9 @@
 import { Box, Button, Card, CardActions, CardContent, Icon, LinearProgress, List, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography, useTheme } from '@mui/material'
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import * as yup from 'yup'
 
 import { useAppThemeContext, useAuthContext } from '../../contexts'
-import { UserService } from '../../services'
 import { ResponseError } from '../../types'
 
 

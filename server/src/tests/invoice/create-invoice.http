@@ -1,26 +1,18 @@
 POST http://127.0.0.1:8080/api/invoices HTTP/1.1
 Content-Type: application/json
-# Authorization: Bearer
+# Authorization: Bearer 
 
 {
-  "invoiceType": "sale",
-  "date": "2022-11-17",
+  "invoiceType": "purchase",
+  "date": "08/12/2022",
   "totalValue": 2000,
   "items": [
     {
       "quantity": 5,
-      "unitPrice": 172.50,
+      "unitPrice": 400.00,
       "product": {
-        "id": 5,
+        "id": 1,
         "name": "product 1"
-      }
-    },
-    {
-      "quantity": 5,
-      "unitPrice": 517.50,
-      "product": {
-        "id": 6,
-        "name": "product 2"
       }
     }
   ]

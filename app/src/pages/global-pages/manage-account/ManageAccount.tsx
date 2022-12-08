@@ -131,7 +131,6 @@ export const ManageAccount = () => {
     				background: alertBackground,
     				color: alertColor
     			})
-
     			return
     		}
 
@@ -141,7 +140,6 @@ export const ManageAccount = () => {
     			message: `ID: ${result}`
     		})
     	})
-
     })
     	.catch((errors: yup.ValidationError) => {
     		const validationErrors: IVFormErrors = {}
@@ -167,9 +165,9 @@ export const ManageAccount = () => {
 				textButtonDelete='excluir conta'
 
 				onClickButtonSave={() => formRef.current?.submitForm()}
-				onClickButtonSaveAndBack={() => {
+				onClickButtonSaveAndBack={async () => {
 					formRef.current?.submitForm()
-					navigate('/')
+					setTimeout(() => navigate('/'), 1000)
 				}}
 				onClickButtonDelete={() => handleDelete(user?.id ?? 0)}
 				onClickButtonBack={() => navigate('/')}

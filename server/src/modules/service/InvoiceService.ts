@@ -12,7 +12,9 @@ export class InvoiceService {
 
 			const newItem = InvoiceItemRepository.create({
 				quantity: item.quantity,
-				product: item.product,
+				product: {
+					'id': item.product.id
+				},
 				invoice: {
 					'id': newInvoice.id
 				},

@@ -7,7 +7,7 @@ export enum InvoiceType {
 
 export type Invoice = {
 	id?: number
-	date: Date
+	date: string
 	invoiceType: InvoiceType
 	totalValue: number
 	items: InvoiceItem[]

@@ -3,14 +3,14 @@ import { useEffect,useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
-import { Toolbar } from '../../../shared/components'
+import { TableBodySelectedProduct, Toolbar } from '../../../shared/components'
 import { useInvoiceItemsContext } from '../../../shared/contexts'
 import { Environment } from '../../../shared/environment'
 import { currencyMask, quantityMask } from '../../../shared/functions'
 import { useDebounce } from '../../../shared/hooks'
 import { BasePageLayout } from '../../../shared/layouts'
-import { ProductService } from '../../../shared/services'
-import { InvoiceItem, Product, ResponseError } from '../../../shared/types'
+import { InvoiceService, ProductService } from '../../../shared/services'
+import { Invoice, InvoiceItem, InvoiceType, Product, ResponseError } from '../../../shared/types'
 
 export const MakePurchase = () => {
 	const theme = useTheme()
@@ -21,7 +21,7 @@ export const MakePurchase = () => {
 	const { debounce } = useDebounce()
 	const [isLoading, setIsLoading] = useState(true)
 	const [rows, setRows] = useState<Product[]>([])
-	const [selectedProduct, setSelectedProduct] = useState<Product | null>()
+	const [selectedProduct, setSelectedProduct] = useState<Product>()
 	const navigate = useNavigate()
 	const { items, setItems} = useInvoiceItemsContext()
 	const [openDialogAddItems, setOpenDialogAddItems] = useState(false)
@@ -33,7 +33,7 @@ export const MakePurchase = () => {
 	}, [searchParams])
 
 	useEffect(() => {
-		setSelectedProduct(null)
+		setSelectedProduct(undefined)
 		debounce(() => {
 			setIsLoading(true)
 			ProductService.getByName(search)
@@ -70,7 +70,7 @@ export const MakePurchase = () => {
 					background: alertBackground,
 					color: alertColor
 				})
-				setSelectedProduct(null)
+				setSelectedProduct(undefined)
 				return
 			}
 
@@ -132,31 +132,70 @@ export const MakePurchase = () => {
 		}
 
 		setItems([...items, newItem])
-		setSelectedProduct(null)
+		setSelectedProduct(undefined)
 		setQuantity('')
 		setUnitPrice('')
 	}
 
-	return(
-		<BasePageLayout title='Efetuar Compra' toolbar={<Toolbar
-			textButtonSave='concluir'
-			showButtonSave
-			showButtonAddItem
-			showButtonViewOrder
-			showButtonBack
-			showSearchInput
-			textSearch={search}
-			onClickButtonAddItem={handleClickAddItem}
-			onClickButtonViewOrder={handleClickViewOrder}
-			onClickButtonBack={() => navigate('-1')}
-			onChangeTextSearch={text => setSearchParams({ search: text }, {replace: true})}
-		/>}
-		>
+	const handleSaveInvoice = () => {
 
-			<Box
-				width='100%'
-				display='flex'
-			>
+		if(!items.length){
+			Swal.fire({
+				titleText:'Não há nenhum item no pedido',
+				text: 'Adicione algum item ao pedido',
+				icon: 'error',
+				background: alertBackground,
+				color: alertColor
+			})
+			return
+		}
+
+		const invoice:Invoice = {
+			date: new Date().toLocaleDateString(),
+			invoiceType: InvoiceType.purchase,
+			items,
+			totalValue: InvoiceService.calculateTotalValue(items)
+		}
+
+		InvoiceService.create(invoice).then(result => {
+
+			if(result instanceof ResponseError){
+				Swal.fire({
+					titleText:`Ocorreu um erro - Código: ${result.statusCode}`,
+					text: result.message.toString(),
+					icon: 'error',
+					background: alertBackground,
+					color: alertColor
+				})
+				return
+			}
+
+			//TODO: emitir relatório com result
+
+			alert(result.id)
+
+		})
+	}
+
+	return(
+		<BasePageLayout
+			title='Efetuar Compra'
+			toolbar={<Toolbar
+				textButtonSave='concluir'
+				showButtonSave
+				showButtonAddItem
+				showButtonViewOrder
+				showButtonBack
+				showSearchInput
+				textSearch={search}
+				onClickButtonSave={handleSaveInvoice}
+				onClickButtonAddItem={handleClickAddItem}
+				onClickButtonViewOrder={handleClickViewOrder}
+				onClickButtonBack={() => navigate(-1)}
+				onChangeTextSearch={text => setSearchParams({ search: text }, {replace: true})}
+			/>}
+		>
+			<Box width='100%' display='flex'>
 
 				<Dialog open={openDialogAddItems}>
 					<DialogContent>
@@ -173,44 +212,8 @@ export const MakePurchase = () => {
 
 									<Table>
 
-										<TableBody>
-											<TableRow>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> Nome </Typography>
-												</TableCell>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> {selectedProduct ? selectedProduct.name : ''} </Typography>
-												</TableCell>
-											</TableRow>
+										<TableBodySelectedProduct showRowCostPrice selectedProduct={selectedProduct}/>
 
-											<TableRow>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> Quantidade </Typography>
-												</TableCell>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> {selectedProduct ? selectedProduct?.quantity : ''} </Typography>
-												</TableCell>
-											</TableRow>
-
-											<TableRow>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> Preço de custo </Typography>
-												</TableCell>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> {selectedProduct ? selectedProduct?.costPrice : ''} </Typography>
-												</TableCell>
-											</TableRow>
-
-											<TableRow>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> Preço de venda </Typography>
-												</TableCell>
-												<TableCell sx={{ border: 'none' }}>
-													<Typography variant='body1'> {selectedProduct ? selectedProduct?.salePrice : ''} </Typography>
-												</TableCell>
-											</TableRow>
-
-										</TableBody>
 									</Table>
 								</TableContainer>
 
@@ -309,55 +312,8 @@ export const MakePurchase = () => {
                         <caption>Nenhum produto selecionado</caption>
 											}
 
-											<TableBody>
-												{selectedProduct && (<>
+											{selectedProduct && <TableBodySelectedProduct showRowCostPrice selectedProduct={selectedProduct}/>}
 
-													<TableRow>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> ID </Typography>
-														</TableCell>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> {selectedProduct ? selectedProduct.id : ''} </Typography>
-														</TableCell>
-													</TableRow>
-
-													<TableRow>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> Nome </Typography>
-														</TableCell>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> {selectedProduct ? selectedProduct.name : ''} </Typography>
-														</TableCell>
-													</TableRow>
-
-													<TableRow>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> Quantidade </Typography>
-														</TableCell>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> {selectedProduct ? selectedProduct?.quantity : ''} </Typography>
-														</TableCell>
-													</TableRow>
-
-													<TableRow>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> Preço de custo </Typography>
-														</TableCell>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> {selectedProduct ? selectedProduct?.costPrice : ''} </Typography>
-														</TableCell>
-													</TableRow>
-
-													<TableRow>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> Preço de venda </Typography>
-														</TableCell>
-														<TableCell sx={{ border: 'none' }}>
-															<Typography variant='subtitle1'> {selectedProduct ? selectedProduct?.salePrice : ''} </Typography>
-														</TableCell>
-													</TableRow></>)}
-
-											</TableBody>
 										</Table>
 									</TableContainer>
 								</CardContent>
