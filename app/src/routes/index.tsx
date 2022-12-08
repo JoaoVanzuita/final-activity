@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { MainMenu, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, SaveProduct, SaveUser } from '../pages'
+import { MainMenu, MakePurchase, MakeSale, ManageAccount, ManageEmployees, ManageInventory, SaveProduct, SaveUser, ViewOrder } from '../pages'
 import { useAuthContext, useDrawerContext } from '../shared/contexts'
 import { ResponseError } from '../shared/types'
 
@@ -72,6 +72,7 @@ export const AppRoutes = () => {
 			<Route path='/gerenciar-conta' element={<ManageAccount/>}/>
 			<Route path='/efetuar-venda' element={<MakeSale/>}/>
 			<Route path='/efetuar-compra' element={<MakePurchase/>}/>
+			<Route path='/visualizar-pedido' element={<ViewOrder/>}/>
 			<Route path='/gerenciar-estoque' element={<ManageInventory/>}/>
 			<Route path='/gerenciar-estoque/produto/:id' element={<SaveProduct/>}/>
 			<Route path='/gerenciar-estoque/produto/novo' element={<SaveProduct/>}/>

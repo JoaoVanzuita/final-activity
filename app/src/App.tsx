@@ -4,7 +4,7 @@ import './App.css'
 import { AppRoutes } from './routes'
 import { Login } from './shared/components'
 import { DrawerMenu } from './shared/components/drawer-menu/DrawerMenu'
-import { AuthProvider, DrawerProvider } from './shared/contexts'
+import { AuthProvider, DrawerProvider, InvoiceItemsProvider } from './shared/contexts'
 import { AppThemeProvider } from './shared/contexts/ThemeContext'
 
 export const App = () => {
@@ -17,7 +17,10 @@ export const App = () => {
 
 					<DrawerProvider>
 						<DrawerMenu>
-							<AppRoutes/>
+							{/* Finge que não existe essa gambiarra */}
+							<InvoiceItemsProvider>
+								<AppRoutes/>
+							</InvoiceItemsProvider>
 						</DrawerMenu>
 					</DrawerProvider>
 

@@ -1,26 +1,26 @@
-version: "3.8"
+version: '3.8'
 
 services:
   final-activity-app:
     container_name: final-activity-app
-    image: final-activity-app-template
-    build: ./app
+    image: node:alpine
     volumes:
       - ./app:/app
+    working_dir: /app
     command: >
       sh -c "npm install && npm run dev"
     ports:
-      - "5173:5173"
+      - '5173:5173'
   final-activity-server:
     container_name: final-activity-server
-    image: final-activity-server-template
-    build: ./server
-    volumes:
-      - ./server:/app
+    image: node:alpine
+    working_dir: /app
     command: >
       sh -c "npm install --force && npm run dev"
+    volumes:
+      - ./server:/app
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - PORT=8080
       - DB_PORT=5432
@@ -33,9 +33,9 @@ services:
       - final-activity-database
   final-activity-database:
     container_name: final-activity-database
-    image: "postgres:14-alpine"
+    image: 'postgres:14-alpine'
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       - POSTGRES_USER=final_activity_database
       - POSTGRES_PASSWORD=final_activity

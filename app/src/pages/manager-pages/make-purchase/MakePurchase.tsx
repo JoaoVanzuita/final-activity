@@ -1,14 +1,16 @@
-import { Box, Card, CardContent, Divider, Grid, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, Divider, Grid, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useEffect,useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
 import { Toolbar } from '../../../shared/components'
+import { useInvoiceItemsContext } from '../../../shared/contexts'
 import { Environment } from '../../../shared/environment'
+import { currencyMask, quantityMask } from '../../../shared/functions'
 import { useDebounce } from '../../../shared/hooks'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ProductService } from '../../../shared/services'
-import { Product, ResponseError } from '../../../shared/types'
+import { InvoiceItem, Product, ResponseError } from '../../../shared/types'
 
 export const MakePurchase = () => {
 	const theme = useTheme()
@@ -21,6 +23,10 @@ export const MakePurchase = () => {
 	const [rows, setRows] = useState<Product[]>([])
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>()
 	const navigate = useNavigate()
+	const { items, setItems} = useInvoiceItemsContext()
+	const [openDialogAddItems, setOpenDialogAddItems] = useState(false)
+	const [quantity, setQuantity] = useState('')
+	const [unitPrice, setUnitPrice] = useState('')
 
 	const search = useMemo(() => {
 		return searchParams.get('search') || ''
@@ -72,6 +78,65 @@ export const MakePurchase = () => {
 		})
 	}
 
+	const handleClickViewOrder = () => {
+
+		if(!items.length){
+			Swal.fire({
+				titleText:'Não há nenhum item no pedido',
+				text: 'Adicione algum item ao pedido',
+				icon: 'error',
+				background: alertBackground,
+				color: alertColor
+			})
+			return
+		}
+		navigate('/visualizar-pedido')
+	}
+
+	const handleClickAddItem = () => {
+
+		if(!selectedProduct){
+			Swal.fire({
+				titleText:'Nenhum produto selecionado',
+				text: 'Selecione um produto na lista',
+				icon: 'error',
+				background: alertBackground,
+				color: alertColor
+			})
+			return
+		}
+		setOpenDialogAddItems(true)
+	}
+
+	const handleSaveItem = () => {
+
+		setOpenDialogAddItems(false)
+
+		if(!quantity.length || !unitPrice.length){
+			Swal.fire({
+				titleText:'Valores inválidos',
+				text: 'Preencha os campos corretamente',
+				icon: 'error',
+				background: alertBackground,
+				color: alertColor
+			})
+			return
+		}
+
+		const price = unitPrice.replace(/[,.]/g, '').substring(0, unitPrice.length-3)+'.'+unitPrice.substring(unitPrice.length-2, unitPrice.length)
+
+		const newItem: InvoiceItem = {
+			quantity: Number(quantity),
+			unitPrice: Number(price),
+			product: selectedProduct!
+		}
+
+		setItems([...items, newItem])
+		setSelectedProduct(null)
+		setQuantity('')
+		setUnitPrice('')
+	}
+
 	return(
 		<BasePageLayout title='Efetuar Compra' toolbar={<Toolbar
 			textButtonSave='concluir'
@@ -81,6 +146,8 @@ export const MakePurchase = () => {
 			showButtonBack
 			showSearchInput
 			textSearch={search}
+			onClickButtonAddItem={handleClickAddItem}
+			onClickButtonViewOrder={handleClickViewOrder}
 			onClickButtonBack={() => navigate('-1')}
 			onChangeTextSearch={text => setSearchParams({ search: text }, {replace: true})}
 		/>}
@@ -90,6 +157,98 @@ export const MakePurchase = () => {
 				width='100%'
 				display='flex'
 			>
+
+				<Dialog open={openDialogAddItems}>
+					<DialogContent>
+						<Box display='flex' flexDirection='row'>
+
+							<Box marginRight={5} component={Paper} padding={2}>
+								<Typography variant='h6' align='center' paddingBottom={2}>
+									Informações do produto
+								</Typography>
+
+								<TableContainer>
+
+									<Divider/>
+
+									<Table>
+
+										<TableBody>
+											<TableRow>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> Nome </Typography>
+												</TableCell>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> {selectedProduct ? selectedProduct.name : ''} </Typography>
+												</TableCell>
+											</TableRow>
+
+											<TableRow>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> Quantidade </Typography>
+												</TableCell>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> {selectedProduct ? selectedProduct?.quantity : ''} </Typography>
+												</TableCell>
+											</TableRow>
+
+											<TableRow>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> Preço de custo </Typography>
+												</TableCell>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> {selectedProduct ? selectedProduct?.costPrice : ''} </Typography>
+												</TableCell>
+											</TableRow>
+
+											<TableRow>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> Preço de venda </Typography>
+												</TableCell>
+												<TableCell sx={{ border: 'none' }}>
+													<Typography variant='body1'> {selectedProduct ? selectedProduct?.salePrice : ''} </Typography>
+												</TableCell>
+											</TableRow>
+
+										</TableBody>
+									</Table>
+								</TableContainer>
+
+							</Box>
+
+							<Box display='flex' flexDirection='column' justifyContent='center'>
+
+								<TextField
+									value={unitPrice}
+									onChange={ev => setUnitPrice(currencyMask(ev))}
+									margin='normal'
+									variant='outlined'
+									id='costPrice'
+									label='Preço unitário (R$)'
+								/>
+								<TextField
+									value={quantity}
+									onChange={ev => setQuantity(quantityMask(ev))}
+									margin='normal'
+									variant='outlined'
+									id='quantity'
+									label='Quantidade'
+								/>
+							</Box>
+
+						</Box>
+					</DialogContent>
+
+					<DialogActions>
+          	<Button onClick={() => {
+							setOpenDialogAddItems(false)
+							setQuantity('')
+							setUnitPrice('')
+						}}>Cancelar</Button>
+          	<Button onClick={handleSaveItem}>Salvar</Button>
+					</DialogActions>
+
+				</Dialog>
 
 				<Grid container margin={2}>
 					<Grid item container display='flex' spacing={2}>
@@ -143,6 +302,7 @@ export const MakePurchase = () => {
 									<TableContainer>
 
 										<Divider/>
+
 										<Table>
 
 											{!selectedProduct &&

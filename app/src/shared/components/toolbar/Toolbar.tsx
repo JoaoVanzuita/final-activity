@@ -16,6 +16,7 @@ interface IToolbarProps {
   showButtonAddItem?: boolean
   showButtonViewOrder?: boolean
   showButtonManageAccount?: boolean
+	showButtonRemoveItem?: boolean
   showButtonBack?: boolean
   showButtonExit?: boolean
 
@@ -27,6 +28,7 @@ interface IToolbarProps {
   onClickButtonAddItem?: () => void
   onClickButtonViewOrder?: () => void
   onClickButtonManageAccount?: () => void
+  onClickButtonRemoveItem?: () => void
   onClickButtonBack?: () => void
   onClickButtonExit?: () => void
 }
@@ -45,6 +47,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 	showButtonAddItem = false,
 	showButtonViewOrder = false,
 	showButtonManageAccount = false,
+	showButtonRemoveItem = false,
 	showButtonExit = false,
 	showButtonBack = false,
 
@@ -56,6 +59,7 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 	onClickButtonAddItem,
 	onClickButtonViewOrder,
 	onClickButtonManageAccount,
+	onClickButtonRemoveItem,
 	onClickButtonBack,
 	onClickButtonExit,
 
@@ -175,7 +179,22 @@ export const Toolbar: React.FC<IToolbarProps> = ({
 					</Typography>
 
 				</Button>}
+
+				{showButtonRemoveItem && (
+					<Button 
+						color='primary'
+						disableElevation
+						variant='contained'
+						onClick={onClickButtonRemoveItem}
+						startIcon={<Icon>delete</Icon>}
+					>
+						<Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+              Remover item selecionado
+						</Typography>
+					</Button>
+				)}
 			</Box>
+
 			<Box
 				display='flex'
 				gap={1}
