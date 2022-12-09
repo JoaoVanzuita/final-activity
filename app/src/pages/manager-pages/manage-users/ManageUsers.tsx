@@ -70,7 +70,7 @@ export const ManageEmployees = () => {
 					setRows(result.filter(user => user.id !== idLoggedUser))
 				})
 		})
-	}, [search])
+	}, [search, idLoggedUser])
 
 	const handleDelete = (id:number) => {
 

@@ -34,7 +34,7 @@ export const TableBodySelectedProduct:React.FC<ITableBodySelectedProductProps> =
 					<Typography variant='body1'> Preço de custo </Typography>
 				</TableCell>
 				<TableCell sx={{ border: 'none' }}>
-					<Typography variant='body1'> {selectedProduct?.costPrice ? selectedProduct?.costPrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) : ''} </Typography>
+					<Typography variant='body1'> {selectedProduct?.costPrice ? Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(selectedProduct?.costPrice) : ''} </Typography>
 				</TableCell>
 			</TableRow>}
 
@@ -43,7 +43,7 @@ export const TableBodySelectedProduct:React.FC<ITableBodySelectedProductProps> =
 					<Typography variant='body1'> Preço de venda </Typography>
 				</TableCell>
 				<TableCell sx={{ border: 'none' }}>
-					<Typography variant='body1'> {selectedProduct?.salePrice ? selectedProduct?.salePrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) : ''} </Typography>
+					<Typography variant='body1'> {selectedProduct?.salePrice ? Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(selectedProduct?.salePrice) : ''} </Typography>
 				</TableCell>
 			</TableRow>
 

@@ -85,7 +85,7 @@ export const ViewOrder = () => {
 										{items && items.map(item => (
 											<TableRow key={Math.random()} onClick={() => handleSelectItem(item)}>
 												<TableCell>{item.product.name}</TableCell>
-												<TableCell>{item.unitPrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
+												<TableCell>{Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.unitPrice)}</TableCell>
 												<TableCell>{item.quantity}</TableCell>
 											</TableRow>
 										))}
@@ -137,7 +137,7 @@ export const ViewOrder = () => {
 														<Typography variant='body1'> Preço unitário </Typography>
 													</TableCell>
 													<TableCell sx={{ border: 'none' }}>
-														<Typography variant='body1'> {selectedItem ? `${selectedItem.unitPrice.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}` : ''} </Typography>
+														<Typography variant='body1'> {selectedItem ? Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(selectedItem.unitPrice) : ''} </Typography>
 													</TableCell>
 												</TableRow>
 
@@ -146,7 +146,7 @@ export const ViewOrder = () => {
 														<Typography variant='body1'> Preço total </Typography>
 													</TableCell>
 													<TableCell sx={{ border: 'none' }}>
-														<Typography variant='body1'> {selectedItem ? `${(selectedItem.quantity * selectedItem.unitPrice).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}` : ''} </Typography>
+														<Typography variant='body1'> {selectedItem ? Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(selectedItem.quantity * selectedItem.unitPrice) : ''} </Typography>
 													</TableCell>
 												</TableRow>
 

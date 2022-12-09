@@ -1,11 +1,11 @@
-import pdfMake from 'pdfmake/build/pdfmake'
-import pdfFonts from 'pdfmake/build/vfs_fonts'
+import * as pdfMake from 'pdfmake/build/pdfmake'
+import * as pdfFonts from 'pdfmake/build/vfs_fonts'
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces'
 
 import { Invoice, InvoiceType } from '../../types'
 
 const create = (invoice: Invoice) => {
-	pdfMake.vfs = pdfFonts.pdfMake.vfs
+	(pdfMake as any).vfs = pdfFonts.pdfMake.vfs
 
 	const tableData = invoice.items.map(item => {
 		return [
