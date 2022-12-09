@@ -9,7 +9,7 @@
     Esse projeto foi inspirado no projeto que desenvolvi para a disciplina de Prática Profissionalizante Orientada 2,
     portanto o objetivo principal era desenvolver um software que possa auxiliar na gestão empresarial com foco em
     pequenas empresas do setor varejista (admito que só pensei nisso quando precisei escrever um "artigo científico"
-    sobre o projeto original), permitindo o gerenciamento de estoque e de funcionários e registro das operações 
+    sobre o projeto original), permitindo o gerenciamento de estoque e de funcionários e registro das operações
     relacionadas às compras e vendas que a empresa realiza. Me orgulho do meu avanço na questão do design.
 
 <hr>
@@ -22,12 +22,12 @@
 - Frontend:
 
       React TS, geração de PDF com pdfmake, componentes da lib Material UI, tema dark (a coisa mais importante de todo o
-      projeto sem dúvida), responsividade, requisições com Axios, formulários com Unform, validação de formulários com 
+      projeto sem dúvida), responsividade, requisições com Axios, formulários com Unform, validação de formulários com
       YUP, autorização de acesso a certas funcionalidades de acordo com o cargo do usuário.
 
 - Backend:
 
-      API rest com Express e TS, CRUD com Typeorm e PostgreSql, documentação com Swagger, autenticação com JWT em rotas 
+      API rest com Express e TS, CRUD com Typeorm e PostgreSql, documentação com Swagger, autenticação com JWT em rotas
       privadas através de um middleware de autenticação, tratamento de erros com middleware de erros.
 
 - Geral:
@@ -57,7 +57,10 @@ relação ao frontend, e a principal delas é que agora eu tenho certeza de que 
 
 - [ ] Não permitir adicionar o mesmo produto em mais de um item em compras e vendas - frontend
 
-- [ ] Resolver os problemas na visualização de valores monetários - frontend
+- [ ] Impedir que sejam comprados produtos em quantidades maiores que as disponíveis
+	no estoque - frontend
+
+- [X] Resolver os problemas na visualização de valores monetários - frontend
 
 <hr>
 
