@@ -1,5 +1,7 @@
 # Projeto desenvolvido para a atividade final da disciplina de Programação 2
 
+## (desenvolvimento interrompido)
+
 <br>
 
 ## Objetivos <s>além de tentar tirar um 10 na disciplina</s>
@@ -64,7 +66,7 @@ relação ao frontend, e a principal delas é que agora eu tenho certeza de que 
 
 <hr>
 
-### Média prioridade (não essencial mas eu quero fazer porque sim):
+### Média prioridade (não essencial):
 
 <br>
 

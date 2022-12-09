@@ -52,6 +52,10 @@ export const MakeSale = () => {
 						return
 					}
 
+					result = result.filter(product => {
+						return product.quantity! > 0
+					})
+
 					setRows(result)
 				})
 		})
