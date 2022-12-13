@@ -66,14 +66,6 @@ relação ao frontend, e a principal delas é que agora eu tenho certeza de que 
 
 <hr>
 
-### Média prioridade (não essencial):
-
-<br>
-
-- [ ] Criar arquivos docker-compose para desenvolvimento e para produção
-
-<hr>
-
 ### Baixa prioridade (<s>muita preguiça</s> Pouco tempo disponível pra implementar):
 
 <br>
